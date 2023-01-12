@@ -14,11 +14,12 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            pip install Pipfile
+            sudo pip install pipenv
+            pipenv install
       - run:
           name: run tests
           command: |
-            python ./workoutshare/manage.py test
+            pipenv run "python ./workoutshare/manage.py test"
       - run:
           name: run lint
           command: pipenv run "pylint .\workoutshare\"

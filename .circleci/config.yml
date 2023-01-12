@@ -19,10 +19,10 @@ jobs:
             pipenv install
       - run:
           name: run tests
-          command: pipenv run "python workoutshare\manage.py test"
+          command: pipenv run "python .\workoutshare\manage.py test"
       - run:
           name: run lint
-          command: pipenv run "pytlin .\workoutshare\"
+          command: pipenv run "pylint .\workoutshare\"
 
       - store_artifacts:
           path: test-reports

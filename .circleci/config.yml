@@ -10,8 +10,12 @@ jobs:
           pkg-manager: pipenv
       - run:
           command: |
-            pipenv run pytest
+            pipenv run pytest --version
           name: Test
+      - run:
+          command: |
+            pipenv run pylint .\workoutshare\
+          name: Lint
 workflows:
   main:
     jobs:

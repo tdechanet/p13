@@ -16,6 +16,7 @@ jobs:
           command: |
             sudo apt-get update
             sudo apt install python3
+            python --version
             sudo apt install python3-pip
             sudo pip install pipenv
             pipenv install

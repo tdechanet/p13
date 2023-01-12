@@ -81,7 +81,7 @@ DATABASES = {
         'PORT': 5432,
         'USER': 'workoutshare_admin',
         'NAME': 'workoutshare_db',
-        'PASSWORD': "DQhiDW6jJ6f5ewgRvG8s",
+        'PASSWORD': os.getenv('WORKOUTSHARE_DB_PASSWORD'),
     }
 }
 

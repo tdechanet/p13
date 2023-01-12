@@ -16,6 +16,7 @@ jobs:
           command: |
             sudo apt-get update
             sudo apt install python3-pip
+            python --version
             sudo pip install pipenv
             pipenv install
       - run:
@@ -23,7 +24,7 @@ jobs:
           command: pipenv run "python manage.py test"
       - run:
           name: run lint
-          command: pipenv run "pytlin .\workoutshare\"
+          command: pipenv run "pylint .\workoutshare\"
 
 workflows:
   build-and-test-workflow:

@@ -5,9 +5,9 @@ name = "pypi"
 
 [packages]
 django = "*"
+psycopg2-binary = "*"
 psycopg2 = "*"
 pylint = "*"
-psycopg2-binary = "*"
 pytest = "*"
 
 [dev-packages]

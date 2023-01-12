@@ -17,6 +17,7 @@ jobs:
       - run:
           name: install dependencies
           command: |
+            /usr/local/bin/python -m pip install --upgrade pip
             sudo pip install pipenv
             pipenv install
       - run:

@@ -14,12 +14,11 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            sudo pip install pipenv
-            pipenv install
+            pip install Django
       - run:
           name: run tests
           command: |
-            pipenv run "python manage.py test"
+            python ./workoutshare/manage.py test
       - run:
           name: run lint
           command: pipenv run "pylint .\workoutshare\"

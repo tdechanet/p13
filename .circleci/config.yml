@@ -15,8 +15,8 @@ jobs:
           name: install dependencies
           command: |
             sudo apt-get update
+            sudo apt install python3
             sudo apt install python3-pip
-            python --version
             sudo pip install pipenv
             pipenv install
       - run:

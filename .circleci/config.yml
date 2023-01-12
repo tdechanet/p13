@@ -1,23 +1,19 @@
 version: 2.1
-
 orbs:
-  python: circleci/python@1.2.0
-
+  python: circleci/python@1.0.0
 jobs:
-  test-and-lint:
+  build:
     executor: python/default
-    docker:
-      - image: cimg/postgres:14.1
-        environment:
-          POSTGRES_USER: example
     steps:
       - checkout
       - python/install-packages:
-         pkg-manager: pipenv
+          args: pytest
+          pkg-manager: pipenv
       - run:
-          name: run tests
-          command: pytest
+          command: |
+            pipenv run pytest --version
+          name: Test it
 workflows:
   main:
     jobs:
-      - test-and-lint
+      - build

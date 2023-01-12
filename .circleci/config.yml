@@ -14,8 +14,8 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            pip install Pipfile
-            pip install Django
+            pip freeze > requirements.txt
+            pip install -r requirements.txt
       - run:
           name: run tests
           command: |

@@ -1,29 +1,13 @@
-version: 2
-jobs:
-  build:
-    docker:
-      - image: circleci/python:3.10
-        environment:
-          PIPENV_VENV_IN_PROJECT: true
-    working_directory: ~/ethereal-machines-backend
+version: 2.1
 
-
-    steps:
-      - checkout
-
-      - run:
-          name: install dependencies
-          command: |
-            sudo pip install pipenv
-            pipenv install
-            ls
-      - run:
-          name: run tests
-          command: pipenv run "python workoutshare/manage.py test"
-      - run:
-          name: run lint
-          command: pipenv run "pylint .\workoutshare\"
-
-      - store_artifacts:
-          path: test-reports
-          destination: test-reports
+orbs:
+  python: circleci/python@1.2.0
+  
+workflows:
+  main:
+    jobs:
+      - python/test:
+          environment:
+            PYTHONPATH: /home/circleci/project/src
+          pkg-manager: pip
+          test-tool: pytest

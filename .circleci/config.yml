@@ -5,6 +5,7 @@ jobs:
       - image: circleci/python:3.10
         environment:
           PIPENV_VENV_IN_PROJECT: true
+          PYTHONPATH: /home/circleci/project/src
     working_directory: ~/ethereal-machines-backend
 
 
@@ -24,7 +25,3 @@ jobs:
       - run:
           name: run lint
           command: pipenv run "pylint .\workoutshare\"
-
-      - store_artifacts:
-          path: test-reports
-          destination: test-reports

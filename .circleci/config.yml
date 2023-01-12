@@ -19,7 +19,7 @@ jobs:
       - run:
           name: run tests
           command: |
-            pipenv run "python ./workoutshare/manage.py test"
+            pipenv run "python manage.py test"
       - run:
           name: run lint
           command: pipenv run "pylint .\workoutshare\"

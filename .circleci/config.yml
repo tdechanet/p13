@@ -7,7 +7,6 @@ jobs:
     steps:
       - checkout
       - python/install-packages:
-          args: pytest
           pkg-manager: pipenv
       - run:
           command: |

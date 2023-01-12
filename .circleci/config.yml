@@ -14,7 +14,7 @@ jobs:
           name: Test
       - run:
           command: |
-            pipenv run pylint .\workoutshare\
+            pipenv run pylint ./workoutshare
           name: Lint
 workflows:
   main:

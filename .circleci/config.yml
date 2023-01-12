@@ -16,7 +16,7 @@ jobs:
           command: |
             sudo pip install pipenv
             pipenv install
-            pwd
+            ls
       - run:
           name: run tests
           command: pipenv run "python .\workoutshare\manage.py test"

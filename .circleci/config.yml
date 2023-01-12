@@ -14,7 +14,7 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            pip install
+            pip install Pipfile
       - run:
           name: run tests
           command: |

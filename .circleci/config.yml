@@ -7,5 +7,7 @@ workflows:
   main:
     jobs:
       - python/test:
+          environment:
+            PYTHONPATH: /home/circleci/project/src
           pkg-manager: pip
           test-tool: pytest

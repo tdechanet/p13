@@ -14,6 +14,7 @@ jobs:
       - run:
           name: install dependencies
           command: |
+            pip install Pipfile
             pip install Django
       - run:
           name: run tests

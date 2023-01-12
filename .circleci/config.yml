@@ -12,6 +12,7 @@ jobs:
       - image: cimg/postgres:14.1
         environment:
           POSTGRES_USER: example
+    working_directory: ~/ethereal-machines-backend
     steps:
       - checkout
       - run:

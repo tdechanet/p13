@@ -12,16 +12,16 @@ jobs:
     steps:
       - checkout
       - run:
-        name: install dependencies
-        command: |
-          sudo pip install pipenv
-          pipenv install
+          name: install dependencies
+          command: |
+            sudo pip install pipenv
+            pipenv install
       - run:
-        name: run tests
-        command: pipenv run "python manage.py test"
+          name: run tests
+          command: pipenv run "python manage.py test"
       - run:
-        name: run lint
-        command: pipenv run "pytlin .\workoutshare\"
+          name: run lint
+          command: pipenv run "pytlin .\workoutshare\"
 
 workflows:
   build-and-test-workflow:

@@ -14,6 +14,7 @@ jobs:
       - run:
           name: install dependencies
           command: |
+            cat Pipfile
             pip freeze > requirements.txt
             pip install -r requirements.txt
       - run:

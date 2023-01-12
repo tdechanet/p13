@@ -5,17 +5,19 @@ orbs:
 
 jobs:
   test-and-lint:
+    executor: python/default
     docker:
       - image: cimg/postgres:14.1
         environment:
           POSTGRES_USER: example
     steps:
       - checkout
+      - python/install-packages:
+         pkg-manager: pipenv
       - run:
           name: run tests
           command: pytest
 workflows:
   main:
     jobs:
-      - test-and-lint:
-          pkg-manager: pipenv
+      - test-and-lint

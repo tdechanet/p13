@@ -16,10 +16,11 @@ jobs:
           command: |
             sudo pip install pipenv
             pipenv install
-            pipenv run "ls"
       - run:
           name: run tests
-          command: python .\workoutshare\manage.py test
+          command: |
+            cd src/
+            pipenv run "python .\workoutshare\manage.py test"
       - run:
           name: run lint
           command: pipenv run "pylint .\workoutshare\"

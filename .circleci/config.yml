@@ -1,29 +1,22 @@
 version: 2.1
-
 orbs:
-  python: circleci/python@2.1.1
-
+  python: circleci/python@1.0.0
 jobs:
-  test-and-lint:
-    docker:
-      - image: cimg/postgres:14.1
-        environment:
-          POSTGRES_USER: example
+  build:
+    executor: python/default
     steps:
       - checkout
+      - python/install-packages:
+          pkg-manager: pipenv
       - run:
-        name: install dependencies
-        command: |
-          sudo pip install pipenv
-          pipenv install
+          command: |
+            pipenv run pytest 
+          name: Test
       - run:
-        name: run tests
-        command: pipenv run "python manage.py test"
-      - run:
-        name: run lint
-        command: pipenv run "pytlin .\workoutshare\"
-
+          command: |
+            pipenv run pylint ./workoutshare
+          name: Lint
 workflows:
-  build-and-test-workflow:
+  main:
     jobs:
-      - test-and-lint
+      - build

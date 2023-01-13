@@ -1,11 +1,22 @@
 version: 2.1
-
 orbs:
-  python: circleci/python@1.2.0
-  
+  python: circleci/python@1.0.0
+jobs:
+  build:
+    executor: python/default
+    steps:
+      - checkout
+      - python/install-packages:
+          pkg-manager: pipenv
+      - run:
+          command: |
+            pipenv run pytest 
+          name: Test
+      - run:
+          command: |
+            pipenv run pylint ./workoutshare
+          name: Lint
 workflows:
   main:
     jobs:
-      - python/test:
-          pkg-manager: pipenv
-          test-tool: pytest
+      - build

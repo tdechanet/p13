@@ -1,6 +1,6 @@
 """This module is used to specify how a page is going to behave."""
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, get_user_model
+from django.contrib.auth import get_user_model
 
 from .forms import SignUpForm
 

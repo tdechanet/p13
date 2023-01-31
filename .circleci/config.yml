@@ -1,15 +1,24 @@
 version: 2.1
 orbs:
   python: circleci/python@1.0.0
-  postgres: onehq/postgres@1.1.0
 jobs:
   build:
+    docker:
+      - image: cimg/python:3.10
+        environment:
+          TEST_DATABASE_URL: postgresql://postgres@localhost/circle_test
+      - image: cimg/postgres:14.0
+        environment:
+          POSTGRES_USER: workoutshare_admin
     executor: python/default
     steps:
       - checkout
-      - python/install-packages:
-          args: '--dev'
-          pkg-manager: pipenv
+      - run:
+          command: pip install pipenv
+          name: Install pipenv
+      - run:
+          command: pipenv install
+          name: Install dependencies
       - run:
           command: |
             pipenv run pytest 

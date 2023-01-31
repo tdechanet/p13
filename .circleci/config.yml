@@ -1,18 +1,20 @@
 version: 2.1
-orbs:
-  python: circleci/python@1.0.0
 jobs:
   build:
     docker:
-      - image: alpine:3.9
+      - image: cimg/postgres:14.1
         environment:
-          ECR_REPOSITORY: <repository>
-    executor: python/default
+          POSTGRES_USER: workoutshare_admin
+      - image: circleci/python:3.6.4
+        environment:
+          PIPENV_VENV_IN_PROJECT: true
     steps:
       - checkout
-      - python/install-packages:
-          args: '--dev'
-          pkg-manager: pipenv
+      - run:
+          name: install dependencies
+          command: |
+            sudo pip install pipenv
+            pipenv install
       - run:
           command: |
             pipenv run pytest 

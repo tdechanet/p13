@@ -3,10 +3,6 @@ orbs:
   python: circleci/python@1.0.0
 jobs:
   build:
-    docker:
-      - image: cimg/postgres:14.1
-        environment:
-          POSTGRES_USER: workoutshare_admin
     executor: python/default
     steps:
       - checkout

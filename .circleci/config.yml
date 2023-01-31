@@ -4,9 +4,9 @@ orbs:
 jobs:
   build:
     docker:
-    - image: cimg/postgres:14.1
-      environment:
-        POSTGRES_USER: workoutshare_admin
+      - image: cimg/postgres:14.1
+        environment:
+          POSTGRES_USER: workoutshare_admin
     executor: python/default
     executor: python/default
     steps:

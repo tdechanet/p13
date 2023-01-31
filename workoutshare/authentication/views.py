@@ -1,14 +1,13 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, get_user_model, views
+from django.contrib.auth import login, get_user_model
 
-from .forms import SignUpForm, LoginForm
+from .forms import SignUpForm
 
 
 User = get_user_model()
 
-class LoginView(views.LoginView):
-    form_class = LoginForm
-    template_name = 'authentication/login.html'
+def test(request):
+    return render(request, 'registration/test.html')
 
 def signup(request):
     if request.method == 'POST':
@@ -17,7 +16,7 @@ def signup(request):
             form.save()
             user = form.save()
             login(request, user)
-            return redirect('base.html')
+            return redirect('/login')
     else:
         form = SignUpForm()
-    return render(request, 'authentication/signup.html', {'form': form})
+    return render(request, 'registration/signup.html', {'form': form})

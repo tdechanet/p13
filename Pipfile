@@ -12,6 +12,8 @@ crispy-bootstrap5 = "*"
 [dev-packages]
 pylint = "*"
 pytest = "*"
+pytest-django = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.10"

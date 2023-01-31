@@ -1,10 +1,10 @@
+"""This module is used to specify the urls accessible to the user."""
 from django.urls import path
 
 from . import views
 
-app_name = 'authentication'
+APP_NAME = 'authentication'
 
 urlpatterns = [
-    path('test/', views.test, name='test'),
     path('signup/', views.signup, name='signup'),
 ]

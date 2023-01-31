@@ -3,6 +3,10 @@ orbs:
   python: circleci/python@1.0.0
 jobs:
   build:
+    docker:
+      - image: alpine:3.9
+        environment:
+          ECR_REPOSITORY: <repository>
     executor: python/default
     steps:
       - checkout

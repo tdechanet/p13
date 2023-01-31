@@ -14,9 +14,9 @@
     <nav class="navbar navbar-expand-md">
       <div class="row container-fluid justify-content-start">
         <img class="logo img-fluid" src="{% static 'image/logo_workoutshare.svg' %}"/>
-        <h1 class="col">Workoutshare</h1>
-        <button class="navbar-toggler no-border col-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
+        <h1 class="col">Workoutshare</h1> 
+        <button class="navbar-toggler no-border col-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon no-border"></span>
         </button>
         <div class="navbar-collapse collapse col-7 justify-content-end" id="navbarScroll">
           <div class="col row justify-content-sm-end justify-content-evenly">
@@ -24,8 +24,10 @@
               <input class="my-1 form-control" type="search" placeholder="Recherche d'utilisateur...">
               <button class="btn research-logo" type="image"><img class="img-fluid" src="{% static 'image/magnifying_glass.svg' %}"/></button>
             </form>
-            <img class="logo img-fluid" src="{% static 'image/profile.svg' %}"/>
-            <img class="logo img-fluid" src="{% static 'image/logout_logo.svg' %}"/>
+            <img class="logo img-fluid" src="{% static 'image/profile.svg' %}"/>    
+            {% if user.is_authenticated %}
+              <a class="logo" href="{% url 'authentication:logout' %}"><img class="img-fluid" src="{% static 'image/logout_logo.svg' %}"/></a>
+            {% endif %}
           </div>
         </div>
       </div>

@@ -19,6 +19,6 @@ nav {
 	border-style: none;
 }
 
-.navbar-toggler:focus {
+.no-border:focus {
 	box-shadow: unset !important;
 }

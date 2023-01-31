@@ -2,7 +2,11 @@ version: 2.1
 orbs:
   python: circleci/python@1.0.0
 jobs:
-  build:
+  test-and-lint:
+    docker:
+      - image: cimg/postgres:14.1
+        environment:
+          POSTGRES_USER: workoutshare_admin
     executor: python/default
     steps:
       - checkout
@@ -20,4 +24,4 @@ jobs:
 workflows:
   main:
     jobs:
-      - build
+      - test-and-lint

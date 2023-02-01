@@ -1,21 +1,28 @@
 version: 2.1
-orbs:
-  python: circleci/python@1.0.0
+
 jobs:
   build:
-    executor: python/default
+    docker:
+      - image: cimg/python:3.10
+        environment:
+          TEST_DATABASE_URL: postgresql://postgres@localhost/circle_test
+      - image: cimg/postgres:14.0
+        environment:
+          POSTGRES_USER: workoutshare_admin
+
     steps:
       - checkout
-      - python/install-packages:
-          args: '--dev'
-          pkg-manager: pipenv
       - run:
-          command: |
-            pipenv run pytest 
+          command: pip install pipenv
+          name: Install pipenv
+      - run:
+          command: pipenv install --dev
+          name: Install dependencies
+      - run:
+          command: pipenv run pytest --cov 
           name: Test
       - run:
-          command: |
-            pipenv run pylint ./workoutshare
+          command: pipenv run pylint ./workoutshare
           name: Lint
 workflows:
   main:

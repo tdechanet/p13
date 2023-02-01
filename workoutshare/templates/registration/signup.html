@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Inscription{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% if user.is_authenticated %}
+  <p class="ms-4 mt-4">Vous êtes déjà connecté. Pour vous déconnecter <a href="{% url 'logout' %}">cliquez ici</a>.</p>
+  {% else %}
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4 col-md-3 col-sm-2 col-1"></div>
+      <h2 class="col-lg-4 col-md-6 col-sm-8 col-10 my-5">Inscription</h2>
+      <div class="col-lg-4 col-md-3 col-sm-2 col-1"></div>
+      <div class="col-lg-4 col-md-3 col-sm-2 col-1"></div>
+      <form class="col-lg-4 col-md-6 col-sm-8 col-10" method="post">
+        {% csrf_token %}{{form|crispy}}
+        <button class= "btn btn-primary" type="submit">S'enregistrer</button>
+      </form>
+      <div class="col-lg-4 col-md-3 col-sm-2 col-1"></div>
+      <div class="col-lg-4 col-md-3 col-sm-2 col-1"></div>
+      <p class="col-lg-4 col-md-6 col-sm-8 col-10 mt-4">Vous avez déjà un compte ? <a href="{% url 'login' %}">Se connecter</a></p>
+      <div class="col-lg-4 col-md-3 col-sm-2 col-1"></div>
+    </div>
+  </div>
+{% endif %}
+{% endblock %}

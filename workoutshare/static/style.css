@@ -1,0 +1,24 @@
+html {
+	font-family: 'Montserrat';
+}
+
+nav {
+	background-color: #AD0202;
+	color: #FFFFFF;
+}
+
+.logo {
+	width: 75px;
+}
+
+.research-logo {
+	width: 60px;
+}
+
+.no-border {
+	border-style: none;
+}
+
+.no-border:focus {
+	box-shadow: unset !important;
+}

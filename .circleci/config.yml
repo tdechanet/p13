@@ -19,7 +19,7 @@ jobs:
           command: pipenv install --dev
           name: Install dependencies
       - run:
-          command: pipenv run pytest 
+          command: pipenv run pytest --cov 
           name: Test
       - run:
           command: pipenv run pylint ./workoutshare

@@ -1,9 +1,12 @@
+$primary: #AD0202;
+$secondary: #1D1E21;
+
 html {
 	font-family: 'Montserrat';
 }
 
 nav {
-	background-color: #AD0202;
+	background-color: $primary;
 	color: #FFFFFF;
 }
 

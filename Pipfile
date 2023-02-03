@@ -8,6 +8,8 @@ django = "*"
 psycopg2-binary = "*"
 django-crispy-forms = "*"
 crispy-bootstrap5 = "*"
+django-compressor = "*"
+django-libsass = "*"
 
 [dev-packages]
 pylint = "*"

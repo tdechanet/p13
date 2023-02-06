@@ -14,6 +14,11 @@ nav {
 	width: 75px;
 }
 
+.card-logo {
+	width: 40px;
+	height: 25px;
+}
+
 .research-logo {
 	width: 60px;
 }
@@ -24,4 +29,8 @@ nav {
 
 .no-border:focus {
 	box-shadow: unset !important;
+}
+
+textarea {
+	resize: none;
 }

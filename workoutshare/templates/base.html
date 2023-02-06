@@ -27,7 +27,7 @@
               <input class="my-1 form-control" type="search" placeholder="Recherche d'utilisateur...">
               <button class="btn research-logo" type="image"><img class="img-fluid" src="{% static 'image/magnifying_glass.svg' %}"/></button>
             </form>
-            <a class="logo" href="{% url 'profile' %}"><img class="img-fluid mt-2" src="{% static 'image/profile.svg' %}"/></a>    
+            <a class="logo" href="{% url 'profile' %}"><img class="img-fluid mt-2" src="{% static 'image/profile.svg' %}"/></a>
             {% if user.is_authenticated %}
               <a class="logo" href="{% url 'logout' %}"><img class="img-fluid" src="{% static 'image/logout_logo.svg' %}"/></a>
             {% endif %}

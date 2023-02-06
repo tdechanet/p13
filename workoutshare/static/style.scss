@@ -20,6 +20,8 @@ nav {
 }
 
 .research-logo {
+	background-color: transparent!important;
+	border-color: transparent!important;
 	width: 60px;
 }
 
@@ -29,6 +31,16 @@ nav {
 
 .no-border:focus {
 	box-shadow: unset !important;
+}
+
+.btn {
+	background-color: $secondary;
+	border-color: $secondary;
+}
+
+.btn:hover {
+	border-color: black;
+	background-color: black;
 }
 
 textarea {

@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'main.apps.MainConfig',
     'crispy_forms',
     'crispy_bootstrap5',
-    'compressor'
+    'compressor',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"

@@ -1,2 +1,4 @@
 [MASTER]
 ignore=migrations
+load-plugins=pylint_django
+disable=E5110

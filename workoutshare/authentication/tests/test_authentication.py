@@ -6,11 +6,10 @@ from authentication.models import CustomUser
 class TestViews(TestCase):
 
     def setUp(self):
-
         self.client = Client()
 
 
-# Test signup
+    # Test signup
     def test_signup_method_get(self):
         response = self.client.get('/signup/')
 

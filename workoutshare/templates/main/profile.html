@@ -5,37 +5,71 @@
 {% block content %}
     <div class="container-fluid d-flex justify-content-around mt-5">
         <button class="btn btn-primary d-none d-sm-block" href="#" role="button">Nouveau programme</button>
-        <button class="btn btn-primary d-block d-sm-none" href="#" role="button">+</button>
+        <button title="Ajouter un nouveau programme" class="btn btn-primary d-block d-sm-none" href="#" role="button">+</button>
         <h2>{{ user.username }}</h2>
         <p class="align-middle">{{ followers }} followers</p>
     </div>
     <div class="container-fluid">
-    {% for program in programs %}
-        <div class="card mt-5 mx-5">
-            <div class="container-fluid">
-                <div class="card-header row d-flex">
-                    <h3 class="card-title col-sm-8 col-12 text-sm-start text-center fs-2">{{ program.name }}</h3>
-                    <div class="col-sm-4 col-12 d-flex justify-content-sm-end justify-content-around">
-                        <a href="{% url 'profile' %}"><img class="card-logo img-fluid mt-2" src="{% static 'image/send.svg' %}"/></a>
-                        <a href="{% url 'profile' %}"><img class="card-logo img-fluid mt-2" src="{% static 'image/edit.svg' %}"/></a>
-                        <a href="{% url 'profile' %}"><img class="card-logo img-fluid mt-2" src="{% static 'image/delete.svg' %}"/></a>
+    {% if programs|length == 0 %}
+        <p class="mt-5 text-center">Vous n'avez pas encore de programme. Rajoutez en un avec le bouton "Nouveau Programme".</p>
+    {% else %}
+        {% for program in programs %}
+            <div class="card mt-5 mx-5">
+                <div class="container-fluid">
+                    <div class="card-header row d-flex">
+                        <h3 class="card-title col-sm-8 col-12 text-sm-start text-center fs-2">{{ program.name }}</h3>
+                        <form class="col-sm-4 col-12 d-flex justify-content-sm-end justify-content-around" method="post">
+                            {% csrf_token %}
+                            <label class="publish-form">
+                                {% if program.published %}
+                                    <img title="Retirer la publication" class="card-logo img-fluid mt-2" src="{% static 'image/send.svg' %}">
+                                {% else %}
+                                    <img title="Publier le programme" class="card-logo send-btn-gray img-fluid mt-2" src="{% static 'image/send.svg' %}">
+                                {% endif %}
+                                <input class="hidden-submit" type="submit" name="program_publish" value="{{ program.published }}">
+                                <input type="hidden" value="{{ forloop.counter0 }}" name="id">
+                            </label>
+                            <label class="publish-form">
+                                <img title="Supprimer le programme" class="card-logo img-fluid mt-2" src="{% static 'image/delete.svg' %}"/>
+                                <button type="button" class="hidden-submit" data-bs-toggle="modal" data-bs-target="#modal{{ forloop.counter0 }}"></button>
+                                <!-- Modal -->
+                                <div class="modal fade" id="modal{{ forloop.counter0 }}" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h3 class="modal-title fs-5" id="modalLabel">{{ program.name }}</h3>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Voulez vous vraiment supprimer le programme ?</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                <button class="btn btn-primary" type="submit" name="program_delete" data-bs-dismiss="modal">Supprimer</button>
+                                                <input type="hidden" value="{{ forloop.counter0 }}" name="id">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </label>
+                        </form>
+                    </div>
+                </div>
+                <div class="card-body row">
+                    <div class="row col-xl-6 col-md-4 col-12">
+                        <p class="my-xl-4 col-xl-6 col-md-12 col-sm-6 col-12 card-text fs-2">{{ program.session_number }} séances</p>
+                        <p class="my-xl-4 mb-sm-0 mb-3 col-xl-6 col-md-12 col-sm-6 col-12 card-text fs-2">{{ program.get_exercice_number }} exercices</p>
+                    </div>
+                    <div class="row col">
+                        {% if program.description %}
+                            <p readonly class="card-text">{{ program.description }}</p>
+                        {% else %}
+                            <p readonly class="card-text">L'auteur n'a pas renseigné de description pour ce programme.</p>
+                        {% endif %}
                     </div>
                 </div>
             </div>
-            <div class="card-body row">
-                <div class="row col-xl-6 col-md-4 col-12">
-                    <p class="my-xl-4 col-xl-6 col-md-12 col-sm-6 col-12 card-text fs-2">{{ program.session_number }} séances</p>
-                    <p class="my-xl-4 mb-sm-0 mb-3 col-xl-6 col-md-12 col-sm-6 col-12 card-text fs-2">{{ program.get_exercice_number }} exercices</p>
-                </div>
-                <div class="row col">
-                    {% if program.description %}
-                        <p readonly class="card-text">{{ program.description }}</p>
-                    {% else %}
-                        <p readonly class="card-text">L'auteur n'a pas renseigné de description pour ce programme.</p>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
+    {% endif %}
     </div>
 {% endblock %}

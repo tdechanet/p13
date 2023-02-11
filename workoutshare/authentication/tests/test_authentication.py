@@ -3,7 +3,7 @@ from django.test import TestCase, Client
 from authentication.models import CustomUser
 
 
-class TestViews(TestCase):
+class TestViewsAuthentication(TestCase):
 
     def setUp(self):
         self.client = Client()
@@ -26,4 +26,3 @@ class TestViews(TestCase):
 
         self.assertRedirects(response, '/login/', status_code=302)
         self.assertEqual(CustomUser.objects.get(id = 1), user)
-        

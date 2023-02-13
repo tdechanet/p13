@@ -17,12 +17,15 @@ def profile(request):
     programs = Program.objects.filter(user_id=request.user.id).order_by('name')
 
     if request.method == 'POST':
+
+        # pointing to the right program
         program_id = request.POST.get('id')
         program = programs[int(program_id)]
 
         if 'program_publish' in request.POST:
             form = request.POST.get('program_publish')
 
+            # reverse published state
             if form == "True":
                 program.published = False
             else:
@@ -30,9 +33,9 @@ def profile(request):
 
             program.save()
 
+        # redirect to delete url
         if 'program_delete' in request.POST:
             return HttpResponseRedirect(f'{program.id}/delete/')
-
 
     context = {
         "followers": number_of_followers,
@@ -44,9 +47,10 @@ def profile(request):
 
 def delete_program(request, program_id):
     """This function is used to permit a user to delete his programs."""
-    program =  get_object_or_404(Program, id=program_id)
+    program = get_object_or_404(Program, id=program_id) # getting program
 
-    if program.user_id == request.user:
+    if program.user_id == request.user: # verifying that the program belong to the connected user
         program.delete()
 
+    # redirect to the profile
     return redirect('profile')

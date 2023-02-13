@@ -8,12 +8,15 @@ django = "*"
 psycopg2-binary = "*"
 django-crispy-forms = "*"
 crispy-bootstrap5 = "*"
+django-compressor = "*"
+django-libsass = "*"
 
 [dev-packages]
 pylint = "*"
 pytest = "*"
 pytest-django = "*"
 pytest-cov = "*"
+pylint-django = "*"
 
 [requires]
 python_version = "3.10"

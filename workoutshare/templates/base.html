@@ -2,13 +2,16 @@
 <html lang="en">
   <head>
     {% load static %}
+    {% load compress %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}{% endblock %}</title>
     <link rel="shortcut icon" href="{% static 'image/logo_workoutshare.svg' %}" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'style.css' %}">
+    {% compress css %}
+      <link type="text/x-scss" rel="stylesheet" href="{% static 'style.scss' %}">
+    {% endcompress %}
   </head>
   <body>
     <nav class="navbar navbar-expand-md">
@@ -24,7 +27,7 @@
               <input class="my-1 form-control" type="search" placeholder="Recherche d'utilisateur...">
               <button class="btn research-logo" type="image"><img class="img-fluid" src="{% static 'image/magnifying_glass.svg' %}"/></button>
             </form>
-            <img class="logo img-fluid" src="{% static 'image/profile.svg' %}"/>    
+            <a class="logo" href="{% url 'profile' %}"><img class="img-fluid mt-2" src="{% static 'image/profile.svg' %}"/></a>
             {% if user.is_authenticated %}
               <a class="logo" href="{% url 'logout' %}"><img class="img-fluid" src="{% static 'image/logout_logo.svg' %}"/></a>
             {% endif %}

@@ -1,0 +1,60 @@
+$primary: #AD0202;
+$secondary: #1D1E21;
+
+html {
+	font-family: 'Montserrat';
+}
+
+nav {
+	background-color: $primary;
+	color: #FFFFFF;
+}
+
+.logo {
+	width: 75px;
+}
+
+.card-logo {
+	width: 40px;
+	height: 25px;
+}
+
+.research-logo {
+	background-color: transparent!important;
+	border-color: transparent!important;
+	width: 60px;
+}
+
+.no-border {
+	border-style: none;
+}
+
+.no-border:focus {
+	box-shadow: unset !important;
+}
+
+.btn {
+	background-color: $secondary;
+	border-color: $secondary;
+}
+
+.btn:hover {
+	border-color: black;
+	background-color: black;
+}
+
+textarea {
+	resize: none;
+}
+
+.publish-form {
+	cursor: pointer;
+}
+
+.hidden-submit {
+	display: none;
+}
+
+.send-btn-gray {
+	filter: invert(51%) sepia(1%) saturate(2301%) hue-rotate(348deg) brightness(94%) contrast(83%);
+}

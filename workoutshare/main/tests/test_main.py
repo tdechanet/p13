@@ -52,6 +52,22 @@ class TestViewsMain(TestCase):
         self.client.login(username='Test User0', password='secret') #Login
         response = self.client.post('/profile/', {'id':0, 'program_delete':''}) #Request delete
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
+    
+
+    # Test delete_program
+
+    def test_delete_program_works(self):
+        self.client.login(username='Test User0', password='secret')
+        response = self.client.post(f'/profile/{self.program_id}/delete/') #Request delete
+        
+        self.assertEqual(response.status_code, 302)
         with self.assertRaises(Program.DoesNotExist): #Check if error raises when getting program
             Program.objects.get(id=self.program_id)
+    
+    def test_delete_others_program(self):
+        self.client.login(username='Test User1', password='secret')
+        response = self.client.post(f'/profile/{self.program_id}/delete/') #Request delete
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Program.objects.get(id=self.program_id).name, "Test Program") #Check if user can't delete others user program

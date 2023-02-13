@@ -17,7 +17,6 @@ def profile(request):
     programs = Program.objects.filter(user_id=request.user.id).order_by('name')
 
     if request.method == 'POST':
-        print("here")
         program_id = request.POST.get('id')
         program = programs[int(program_id)]
 
@@ -44,8 +43,9 @@ def profile(request):
 
 
 def delete_program(request, program_id):
-    # Faire avec une requête dans une autre url profile/{id}/delete
+    """This function is used to permit a user to delete his programs."""
     program =  get_object_or_404(Program, id=program_id)
+
     if program.user_id == request.user:
         program.delete()
 

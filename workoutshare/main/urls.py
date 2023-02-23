@@ -8,4 +8,5 @@ APP_NAME = 'main'
 urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('profile/<int:program_id>/delete/', views.delete_program, name='delete_program'),
+    path('profile/<int:program_id>/', views.program, name='program'),
 ]

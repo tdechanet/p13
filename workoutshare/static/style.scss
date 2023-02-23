@@ -47,7 +47,7 @@ textarea {
 	resize: none;
 }
 
-.publish-form {
+.pointer-image {
 	cursor: pointer;
 }
 
@@ -57,4 +57,12 @@ textarea {
 
 .send-btn-gray {
 	filter: invert(51%) sepia(1%) saturate(2301%) hue-rotate(348deg) brightness(94%) contrast(83%);
+}
+
+.border-secondary {
+	border: 1px solid $secondary;
+}
+
+.row-height {
+	min-height: 150px;
 }

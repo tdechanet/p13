@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Inscription{% endblock %}
+{% block title %}{{ user.username }}{% endblock %}
 {% load static %}
 {% block content %}
     <div class="container-fluid d-flex justify-content-around mt-5">
@@ -20,7 +20,7 @@
                         <h3 class="card-title col-sm-8 col-12 text-sm-start text-center fs-2">{{ program.name }}</h3>
                         <form class="col-sm-4 col-12 d-flex justify-content-sm-end justify-content-around" method="post">
                             {% csrf_token %}
-                            <label class="publish-form">
+                            <label class="pointer-image">
                                 {% if program.published %}
                                     <img title="Retirer la publication" class="card-logo img-fluid mt-2" src="{% static 'image/send.svg' %}">
                                 {% else %}
@@ -29,7 +29,7 @@
                                 <input class="hidden-submit" type="submit" name="program_publish" value="{{ program.published }}">
                                 <input type="hidden" value="{{ forloop.counter0 }}" name="id">
                             </label>
-                            <label class="publish-form">
+                            <label class="pointer-image">
                                 <img title="Supprimer le programme" class="card-logo img-fluid mt-2" src="{% static 'image/delete.svg' %}"/>
                                 <button type="button" class="hidden-submit" data-bs-toggle="modal" data-bs-target="#modal{{ forloop.counter0 }}"></button>
                                 <!-- Modal -->

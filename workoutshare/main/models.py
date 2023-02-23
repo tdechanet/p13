@@ -1,6 +1,8 @@
 """This module is used to specify tables in the database for the main part of the app."""
 from django.db import models
 from authentication.models import CustomUser #pylint: disable=E0401
+from django.core.validators import MaxValueValidator
+from datetime import timedelta
 
 # Create your models here.
 
@@ -57,8 +59,9 @@ class Exercice(models.Model):
     name = models.CharField(max_length=45)
     sets = models.IntegerField(default=4)
     reps = models.IntegerField(default=12)
-    load = models.IntegerField(default=0)
-    cool = models.DurationField(default=180)
+    cool = models.DurationField(default=180, validators=[
+        MaxValueValidator(timedelta(minutes=9, seconds=59))
+    ])
 
     def __str__(self):
         return self.name

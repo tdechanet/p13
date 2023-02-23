@@ -2,7 +2,7 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 
-from .models import CustomUser, Program
+from .models import CustomUser, Program, Session, Exercice
 
 # Create your views here.
 
@@ -54,3 +54,36 @@ def delete_program(request, program_id):
 
     # redirect to the profile
     return redirect('profile')
+
+
+@login_required(login_url='/login/')
+def program(request, program_id):
+    """This function is used to show the details of a program."""
+
+    program = get_object_or_404(Program, id=program_id) # getting program
+    sessions = Session.objects.filter(program_id=program_id)
+    sessions_dic = {}
+
+    for session in sessions:
+        exercices = Exercice.objects.filter(session_id=session.id)
+        exercices = timedelta_no_hours(exercices)
+        sessions_dic[session] = exercices
+
+    context = {
+        "program" : program,
+        "sessions" : sessions_dic
+    }
+
+    return render(request, 'main/program.html', context)
+
+
+def timedelta_no_hours(exercices):
+    """Convert duration time in only minutes and seconds"""
+    for exercice in exercices:
+        time_in_seconds = exercice.cool.seconds
+        minutes = time_in_seconds // 60
+        seconds = time_in_seconds % 60
+        if seconds == 0:
+            seconds = "00"
+        exercice.cool = f"{minutes}:{seconds}"
+    return exercices

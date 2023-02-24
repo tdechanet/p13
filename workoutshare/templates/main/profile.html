@@ -17,7 +17,7 @@
             <div class="card mt-5 mx-5">
                 <div class="container-fluid">
                     <div class="card-header row d-flex">
-                        <h3 class="card-title col-sm-8 col-12 text-sm-start text-center fs-2">{{ program.name }}</h3>
+                        <a class="card-title col-sm-8 col-12 text-sm-start text-center fs-2" href="{% url 'program' program.pk %}"><h3>{{ program.name }}</h3></a>
                         <form class="col-sm-4 col-12 d-flex justify-content-sm-end justify-content-around" method="post">
                             {% csrf_token %}
                             <label class="pointer-image">

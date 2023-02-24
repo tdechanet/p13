@@ -35,7 +35,7 @@ def profile(request):
 
         # redirect to delete url
         if 'program_delete' in request.POST:
-            return HttpResponseRedirect(f'{program.id}/delete/')
+            return redirect('delete_program', program_id=program.id)
 
     context = {
         "followers": number_of_followers,
@@ -69,6 +69,15 @@ def program(request, program_id):
         exercices = timedelta_no_hours(exercices)
         sessions_dic[session] = exercices
 
+    if request.method == 'POST':
+
+            # pointing to the right session
+            session_id = request.POST.get('id')
+            session = sessions[int(session_id)]
+
+            return redirect('delete_session', session_id=session.id)
+
+    
     context = {
         "program" : program,
         "sessions" : sessions_dic
@@ -76,6 +85,21 @@ def program(request, program_id):
 
     return render(request, 'main/program.html', context)
 
+
+def delete_session(request, session_id):
+    """This function is used to permit a user to delete his sessions."""
+    session = get_object_or_404(Session, id=session_id) # getting session
+    program = Program.objects.get(id=session.program_id.id) # getting program
+
+    if program.user_id == request.user: # verifying that the session belong to the connected user
+        session.delete()
+
+    # redirect to the profile
+    return redirect('program', program_id=program.id)
+
+
+def session(request):
+    pass
 
 def timedelta_no_hours(exercices):
     """Convert duration time in only minutes and seconds"""

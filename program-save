@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}{{ program.name }}{% endblock %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid d-flex justify-content-around mt-5">
+        <h2>{{ program.name }}</h2>
+    </div>
+    <div class="container-fluid">
+        {% for session, exercices in sessions.items %}
+        <div class="row">
+            <div class="card col-11 mt-5 mx-5">
+                <div class="container-fluid">
+                    <div class="card-header row d-flex text-center">
+                        <h3 class="col-3 card-title text-sm-start text-center fs-2">{{ session }}</h3>
+                        <p class="col-2 card-text fs-2">Groupe</p>
+                        <p class="col-2 card-text fs-2">Séries</p>
+                        <p class="col-2 card-text fs-2">Répétitions</p>
+                        <p class="col-2 card-text fs-2">Repos</p>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    {% for exercice in exercices %}
+                        <div class="card-body row text-center align-middle">
+                            <p class="col-3 card-text fs-2 align-middle">{{ exercice }}</p>
+                            <p class="col-2 card-text fs-2">{{ exercice.muscle_group_id }}</p>
+                            <p class="col-2 card-text fs-2">{{ exercice.sets }}</p>
+                            <p class="col-2 card-text fs-2">{{ exercice.reps }}</p>
+                            <p class="col-2 card-text fs-2">{{ exercice.cool }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <form class="col-1 row d-flex justify-content-sm-end justify-content-around" method="post">
+                {% csrf_token %}
+                <label class="pointer-image col-12">
+                    <img title="Modifier la séance" class="card-logo img-fluid mt-2" src="{% static 'image/edit.svg' %}">
+                    <input class="hidden-submit" type="submit" name="session_edit">
+                    <input type="hidden" value="{{ forloop.counter0 }}" name="id">
+                </label>
+                <label class="pointer-image col-12">
+                    <img title="Supprimer la session" class="card-logo img-fluid mt-2" src="{% static 'image/delete.svg' %}"/>
+                    <button type="button" class="hidden-submit" data-bs-toggle="modal" data-bs-target="#modal{{ forloop.counter0 }}"></button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="modal{{ forloop.counter0 }}" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="modal-title fs-5" id="modalLabel">{{ session }}</h3>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Voulez vous vraiment supprimer la session ?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                    <button class="btn btn-primary" type="submit" name="session_delete" data-bs-dismiss="modal">Supprimer</button>
+                                    <input type="hidden" value="{{ forloop.counter0 }}" name="id">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </label>
+            </form>
+        </div>
+        {% endfor %}
+        <div class="container-fluid d-flex justify-content-around mt-5">
+            <button class="btn btn-primary mb-5 d-none d-sm-block" href="#" role="button">Nouvelle séance</button>
+        </div>
+    </div>
+{% endblock %}

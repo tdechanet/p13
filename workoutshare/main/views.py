@@ -1,8 +1,10 @@
 """This module is used to specify how a page is going to behave."""
-from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.http import Http404
 
 from .models import CustomUser, Program, Session, Exercice
+from .forms import ExerciceForm
 
 # Create your views here.
 
@@ -98,8 +100,41 @@ def delete_session(request, session_id):
     return redirect('program', program_id=program.id)
 
 
-def session(request):
-    pass
+def session(request, session_id):
+    """This function is used to permit a user to modify or create sessions."""
+    session = get_object_or_404(Session, id=session_id) # getting session
+    if session.get_owner() != request.user: # verifying that the session belong to the connected user 
+        raise Http404()
+    else:
+    
+        exercices = Exercice.objects.filter(session_id=session.id)
+        exercices = timedelta_no_hours(exercices)
+
+        forms_list = []
+        for exercice in exercices:
+            form = ExerciceForm(instance=exercice)
+            forms_list.append(form)
+
+        context = {
+            "session" : session,
+            "exercices" : exercices,
+            "forms" : forms_list
+        }
+    if request.method == 'POST':
+        form = ExerciceForm(request.POST)
+        if form.is_valid():
+            print("valid")
+            exercice = form.save(commit=False)
+            exercice.session_id = session
+            exercice.save()
+            return redirect('session', session_id=session.id)
+        else:
+            print("not valid")
+            return redirect('program', program_id = session.program_id.id)
+
+
+    return render(request, 'main/session.html', context)
+
 
 def timedelta_no_hours(exercices):
     """Convert duration time in only minutes and seconds"""

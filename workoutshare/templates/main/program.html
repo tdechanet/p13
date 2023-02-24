@@ -45,7 +45,7 @@
                 <table class="table table-striped table-bordered">
                     <thead>
                         <tr>
-                            <th class="col-4">{{ session }}</th>
+                            <th class="col-4">{{ session.name }}</th>
                             <th class="col-2">Groupe</th>
                             <th class="col-2">Séries</th>
                             <th class="col-2">Répétitions</th>
@@ -55,7 +55,7 @@
                     <tbody>
                         {% for exercice in exercices %}
                             <tr>
-                                <td>{{ exercice }}</td>
+                                <td>{{ exercice.name }}</td>
                                 <td>{{ exercice.muscle_group_id }}</td>
                                 <td>{{ exercice.sets }}</td>
                                 <td>{{ exercice.reps }}</td>

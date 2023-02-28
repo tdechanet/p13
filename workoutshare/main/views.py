@@ -1,5 +1,5 @@
 """This module is used to specify how a page is going to behave."""
-from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
 from .models import CustomUser, Program, Session, Exercice
@@ -96,10 +96,6 @@ def delete_session(request, session_id):
 
     # redirect to the profile
     return redirect('program', program_id=program.id)
-
-
-def session(request):
-    pass
 
 def timedelta_no_hours(exercices):
     """Convert duration time in only minutes and seconds"""

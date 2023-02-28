@@ -64,7 +64,7 @@ class Exercice(models.Model):
     name = models.CharField(max_length=45)
     sets = models.IntegerField(default=4)
     reps = models.IntegerField(default=12)
-    cool = models.DurationField(default=180, validators=[
+    cool = models.DurationField(default="3:00", validators=[
         MaxValueValidator(timedelta(minutes=9, seconds=59))
     ])
 

@@ -33,7 +33,6 @@ class TestViewsMain(TestCase):
         response = self.client.get('/profile/')
 
         self.assertEqual(response.status_code, 200)
-        # self.assertEqual(response.context['followers'], 1) #Check the number of followers
         self.assertEqual(response.context['programs'][0].name, 'Test Program') #Check if the program is sent to template
 
     def test_profile_publish_unpublish_program(self):
@@ -59,7 +58,7 @@ class TestViewsMain(TestCase):
 
     def test_delete_program_works(self):
         self.client.login(username='Test User0', password='secret')
-        response = self.client.post(f'/profile/{self.program_id}/delete/') #Request delete
+        response = self.client.post(f'/program/{self.program_id}/delete/') #Request delete
         
         self.assertEqual(response.status_code, 302)
         with self.assertRaises(Program.DoesNotExist): #Check if error raises when getting program
@@ -67,7 +66,7 @@ class TestViewsMain(TestCase):
     
     def test_delete_others_program(self):
         self.client.login(username='Test User1', password='secret')
-        response = self.client.post(f'/profile/{self.program_id}/delete/') #Request delete
+        response = self.client.post(f'/program/{self.program_id}/delete/') #Request delete
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Program.objects.get(id=self.program_id).name, "Test Program") #Check if user can't delete others user program

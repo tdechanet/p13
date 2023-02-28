@@ -2,6 +2,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
+from django.forms import formset_factory
 
 from .models import CustomUser, Program, Session, Exercice
 from .forms import ExerciceForm
@@ -73,11 +74,11 @@ def program(request, program_id):
 
     if request.method == 'POST':
 
-            # pointing to the right session
-            session_id = request.POST.get('id')
-            session = sessions[int(session_id)]
+        # pointing to the right session
+        session_id = request.POST.get('id')
+        session = sessions[int(session_id)]
 
-            return redirect('delete_session', session_id=session.id)
+        return redirect('delete_session', session_id=session.id)
 
     
     context = {
@@ -105,35 +106,41 @@ def session(request, session_id):
     session = get_object_or_404(Session, id=session_id) # getting session
     if session.get_owner() != request.user: # verifying that the session belong to the connected user 
         raise Http404()
-    else:
-    
-        exercices = Exercice.objects.filter(session_id=session.id)
-        exercices = timedelta_no_hours(exercices)
 
-        forms_list = []
-        for exercice in exercices:
-            form = ExerciceForm(instance=exercice)
-            forms_list.append(form)
 
-        context = {
-            "session" : session,
-            "exercices" : exercices,
-            "forms" : forms_list
-        }
     if request.method == 'POST':
         form = ExerciceForm(request.POST)
+        print(form)
         if form.is_valid():
-            print("valid")
-            exercice = form.save(commit=False)
-            exercice.session_id = session
-            exercice.save()
-            return redirect('session', session_id=session.id)
-        else:
-            print("not valid")
-            return redirect('program', program_id = session.program_id.id)
+            pass
 
+    else:
+        exerices_formset = build_exerices_formset(session.id)
+
+    context = {
+        "session" : session,
+        "formset" : exerices_formset
+    }
 
     return render(request, 'main/session.html', context)
+
+
+def build_exerices_formset(session_pk):
+    exercices = Exercice.objects.filter(session_id=session_pk)
+    exercices = timedelta_no_hours(exercices)
+    ExerciceFormSet = formset_factory(ExerciceForm)
+    exercice_list = []
+    for exercice in exercices:
+        exercice_list.append({
+            'muscle_group_id' : exercice.muscle_group_id,
+            'name' : exercice.name,
+            'sets' : exercice.sets,
+            'reps' : exercice.reps,
+            'cool' : exercice.cool,
+        })
+    
+    exercices_formset = ExerciceFormSet(initial=exercice_list)
+    return exercices_formset
 
 
 def timedelta_no_hours(exercices):

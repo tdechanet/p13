@@ -7,7 +7,7 @@
         <h2>{{ program.name }}</h2>
     </div>
     <div class="container-fluid">
-        {% for session, exercices in sessions.items %}
+        {% for session_name, exercices in sessions.items %}
             <div class="mt-5 mb-2 d-flex flex-row-reverse">
                 <form method="post">
                     {% csrf_token %}
@@ -24,7 +24,7 @@
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h3 class="modal-title fs-5" id="modalLabel">{{ session }}</h3>
+                                        <h3 class="modal-title fs-5" id="modalLabel">{{ session_name }}</h3>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
@@ -45,7 +45,7 @@
                 <table class="table table-striped table-bordered">
                     <thead>
                         <tr>
-                            <th class="col-4">{{ session }}</th>
+                            <th class="col-4">{{ session_name }}</th>
                             <th class="col-2">Groupe</th>
                             <th class="col-2">Séries</th>
                             <th class="col-2">Répétitions</th>

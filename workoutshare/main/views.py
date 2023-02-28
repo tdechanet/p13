@@ -35,7 +35,7 @@ def profile(request):
 
         # redirect to delete url
         if 'program_delete' in request.POST:
-            return redirect('delete_program', program_id=program.id)
+            return redirect('delete_program', program_id=program_selected.id)
 
     context = {
         "followers": number_of_followers,

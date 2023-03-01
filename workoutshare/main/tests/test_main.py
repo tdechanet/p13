@@ -42,7 +42,7 @@ class TestViewsMain(TestCase):
     def test_profile_not_logged(self):
         response = self.client.get('/profile/')
 
-        self.assertRedirects(response, '/login/?next=%2Fprofile%2F', status_code=302)
+        self.assertRedirects(response, '/login/?next=%2Fprofile%2F', status_code=302) #Check that the program redirect to login
 
     def test_profile_logged(self):
         self.client.login(username='Test User0', password='secret') #Login
@@ -56,7 +56,6 @@ class TestViewsMain(TestCase):
         response = self.client.post('/profile/', {'id':0, 'program_publish':'False'}) #Request publish
 
         self.assertEqual(response.status_code, 200)
-
         self.assertEqual(Program.objects.get(id=self.program0.pk).published, True) #Test if program has been published
 
         response = self.client.post('/profile/', {'id':0, 'program_publish':'True'}) #Request unpublish
@@ -67,7 +66,7 @@ class TestViewsMain(TestCase):
         self.client.login(username='Test User0', password='secret') #Login
         response = self.client.post('/profile/', {'id':0, 'program_delete':''}) #Request delete
 
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 302) #Check if the program redirect to delete url
 
 
     # Test delete_program
@@ -91,21 +90,20 @@ class TestViewsMain(TestCase):
     def test_program_not_logged(self):
         response = self.client.get(f'/program/{self.program0.pk}/')
 
-        self.assertRedirects(response, '/login/?next=%2Fprogram%2F10%2F', status_code=302)
+        self.assertRedirects(response, '/login/?next=%2Fprogram%2F10%2F', status_code=302) #Check that the program redirect to login
 
     def test_program_logged(self):
         self.client.login(username='Test User1', password='secret')
         response = self.client.get(f'/program/{self.program0.pk}/')
 
         self.assertEqual(response.status_code, 200)
-        print(response.context['sessions'])
         self.assertEqual(response.context['sessions']["Test Session"][0], self.exercice0) #Check if the session is sent to template
 
     def test_program_delete_session(self):
         self.client.login(username='Test User0', password='secret') #Login
         response = self.client.post(f'/program/{self.program0.pk}/', {'id':0, 'session_delete':''}) #Request delete
 
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 302) #Check if the program redirect to delete url
 
     # Test delete_session
     def test_delete_session_works(self):

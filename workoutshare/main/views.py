@@ -27,11 +27,11 @@ def profile(request):
 
         # redirect to delete url
         if 'program_delete' in request.POST:
-            return redirect('delete_program', program_id=program_selected.id)
+            return redirect('delete_program', program_id=program_selected.pk)
 
 
     # getting the number of followers of the user
-    number_of_followers = CustomUser.objects.filter(authors=request.user.id).count()
+    number_of_followers = CustomUser.objects.filter(authors=request.user.pk).count()
 
     context = {
         "followers": number_of_followers,
@@ -67,12 +67,12 @@ def program(request, program_id):
         session_id = request.POST.get('id')
         session = sessions[int(session_id)]
 
-        return redirect('delete_session', session_id=session.id)
+        return redirect('delete_session', session_id=session.pk)
 
     # building a dict of exercices for each sessions
     sessions_dic = {}
     for session in sessions:
-        exercices = Exercice.objects.filter(session_id=session.id)
+        exercices = Exercice.objects.filter(session_id=session.pk)
         exercices_fixed_time = timedelta_no_hours(exercices)
         sessions_dic[session.name] = exercices_fixed_time
 
@@ -93,7 +93,7 @@ def delete_session(request, session_id):
         session.delete()
 
     # redirect to the profile
-    return redirect('program', program_id=program_selected.id)
+    return redirect('program', program_id=program_selected.pk)
 
 def timedelta_no_hours(exercices):
     """Convert duration time in only minutes and seconds"""

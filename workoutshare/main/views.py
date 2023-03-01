@@ -3,15 +3,34 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
 from .models import CustomUser, Program, Session, Exercice
+from authentication.models import Following
 
 # Create your views here.
 
+def home(request):
+    follows = Following.objects.filter(follower=request.user.pk)
+
+    following_program_list = []
+    for follow in follows:
+        programs = Program.objects.get(user_id=follow.author)
+        following_program_list.append(programs)
+
+    context = {
+        "programs" : following_program_list
+    }
+
+    return render (request, 'main/home.html', context)
+
+
 @login_required(login_url='/login/')
-def profile(request):
+def profile(request, user_id=None):
     """This function is used to show to a user all his programs."""
 
+    # if a user id as been specified in the url we use it, else we use the id of the connected user
+    selected_user_id = user_id if user_id else request.user.pk
+
     # getting the programs of the user
-    programs = Program.objects.filter(user_id=request.user.pk).order_by('name')
+    programs = Program.objects.filter(user_id=selected_user_id).order_by('name')
 
     if request.method == 'POST':
 
@@ -33,9 +52,12 @@ def profile(request):
     # getting the number of followers of the user
     number_of_followers = CustomUser.objects.filter(authors=request.user.pk).count()
 
+    is_owner = request.user.pk == selected_user_id # checking if the user is the owner of the profile
+
     context = {
         "followers": number_of_followers,
         "programs": programs,
+        "is_owner" : is_owner
     }
 
     return render(request, 'main/profile.html', context)
@@ -76,9 +98,12 @@ def program(request, program_id):
         exercices_fixed_time = timedelta_no_hours(exercices)
         sessions_dic[session.name] = exercices_fixed_time
 
+    is_owner = request.user == program_selected.user_id # checking if the user is the owner of the program
+
     context = {
         "program" : program_selected_name,
-        "sessions" : sessions_dic
+        "sessions" : sessions_dic,
+        "is_owner" : is_owner
     }
 
     return render(request, 'main/program.html', context)

@@ -2,7 +2,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
-from django.forms import formset_factory
+from django.forms.models import modelformset_factory
 
 from .models import CustomUser, Program, Session, Exercice
 from .forms import ExerciceForm
@@ -106,20 +106,20 @@ def session(request, session_id):
     session = get_object_or_404(Session, id=session_id) # getting session
     if session.get_owner() != request.user: # verifying that the session belong to the connected user 
         raise Http404()
+    
+    exercices = Exercice.objects.filter(session_id=session.pk)
+    
+    ExerciceFormset = modelformset_factory(Exercice, form=ExerciceForm)
+    formset = ExerciceFormset(request.POST or None, queryset=exercices)
 
-
-    if request.method == 'POST':
-        form = ExerciceForm(request.POST)
-        print(form)
-        if form.is_valid():
-            pass
-
-    else:
-        exerices_formset = build_exerices_formset(session.id)
+    if formset.is_valid():
+        print("valid")
+        for form in formset:
+            print(form)
 
     context = {
         "session" : session,
-        "formset" : exerices_formset
+        "formset" : formset
     }
 
     return render(request, 'main/session.html', context)
@@ -140,7 +140,7 @@ def build_exerices_formset(session_pk):
         })
     
     exercices_formset = ExerciceFormSet(initial=exercice_list)
-    return exercices_formset
+    return ExerciceFormSet, exercices_formset
 
 
 def timedelta_no_hours(exercices):

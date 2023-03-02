@@ -9,6 +9,7 @@
     <div class="container-fluid">
         {% for session_name, exercices in sessions.items %}
             <div class="mt-5 mb-2 d-flex flex-row-reverse">
+                {% if is_owner %}
                 <form method="post">
                     {% csrf_token %}
                     <label class="pointer-image">
@@ -40,6 +41,7 @@
                         </div>
                     </label>
                 </form>
+                {% endif %}
             </div>
             <div class="table-responsive">
                 <table class="table table-striped table-bordered">
@@ -66,8 +68,10 @@
                 </table>
             </div>
         {% endfor %}
+        {% if is_owner %}
         <div class="container-fluid d-flex justify-content-around mt-5">
             <button class="btn btn-primary mb-5 d-none d-sm-block" href="#" role="button">Nouvelle séance</button>
         </div>
+        {% endif %}
     </div>
 {% endblock %}

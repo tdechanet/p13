@@ -2,18 +2,24 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
+from authentication.models import Following #pylint: disable=E0401
 from .models import CustomUser, Program, Session, Exercice
-from authentication.models import Following
 
 # Create your views here.
 
 def home(request):
-    follows = Following.objects.filter(follower=request.user.pk)
+    """This function is used to show to a user all the programs he follows."""
 
     following_program_list = []
-    for follow in follows:
-        programs = Program.objects.get(user_id=follow.author)
-        following_program_list.append(programs)
+
+    if request.user.is_authenticated:
+        # if the user is connected, we establish the list of the users he follow
+        follows = Following.objects.filter(follower=request.user)
+
+        # then, we fill the list of the published programs of the followed users
+        for follow in follows:
+            programs = Program.objects.filter(user_id=follow.author, published=1)
+            following_program_list.append(programs)
 
     context = {
         "programs" : following_program_list
@@ -52,7 +58,8 @@ def profile(request, user_id=None):
     # getting the number of followers of the user
     number_of_followers = CustomUser.objects.filter(authors=request.user.pk).count()
 
-    is_owner = request.user.pk == selected_user_id # checking if the user is the owner of the profile
+    # checking if the user is the owner of the profile
+    is_owner = request.user.pk == selected_user_id
 
     context = {
         "followers": number_of_followers,
@@ -98,7 +105,8 @@ def program(request, program_id):
         exercices_fixed_time = timedelta_no_hours(exercices)
         sessions_dic[session.name] = exercices_fixed_time
 
-    is_owner = request.user == program_selected.user_id # checking if the user is the owner of the program
+    # checking if the user is the owner of the program
+    is_owner = request.user == program_selected.user_id
 
     context = {
         "program" : program_selected_name,

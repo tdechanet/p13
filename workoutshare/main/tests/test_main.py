@@ -17,7 +17,7 @@ class TestViewsMain(TestCase):
             user_id=self.user0,
             name="Test Program",
             description="Test Description",
-            published=0,
+            published=1,
         )
 
         self.session0 = Session.objects.create(
@@ -38,6 +38,14 @@ class TestViewsMain(TestCase):
             cool = "2:00"
         )
 
+    # Test home
+    def test_home_followers(self):
+        self.client.login(username='Test User1', password='secret') #Login
+        response = self.client.get('/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["programs"][0][0], self.program0)
+
     # Test profile
     def test_profile_not_logged(self):
         response = self.client.get('/profile/')
@@ -51,16 +59,16 @@ class TestViewsMain(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['programs'][0].name, 'Test Program') #Check if the program is sent to template
 
-    def test_profile_publish_unpublish_program(self):
+    def test_profile_unpublish_publish_program(self):
         self.client.login(username='Test User0', password='secret') #Login
-        response = self.client.post('/profile/', {'id':0, 'program_publish':'False'}) #Request publish
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(Program.objects.get(id=self.program0.pk).published, True) #Test if program has been published
-
         response = self.client.post('/profile/', {'id':0, 'program_publish':'True'}) #Request unpublish
 
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(Program.objects.get(id=self.program0.pk).published, False) #Test if program has been unpublished
+
+        response = self.client.post('/profile/', {'id':0, 'program_publish':'False'}) #Request publish
+
+        self.assertEqual(Program.objects.get(id=self.program0.pk).published, True) #Test if program has been published
 
     def test_profile_delete_program(self):
         self.client.login(username='Test User0', password='secret') #Login
@@ -90,7 +98,7 @@ class TestViewsMain(TestCase):
     def test_program_not_logged(self):
         response = self.client.get(f'/program/{self.program0.pk}/')
 
-        self.assertRedirects(response, '/login/?next=%2Fprogram%2F10%2F', status_code=302) #Check that the program redirect to login
+        self.assertRedirects(response, '/login/?next=%2Fprogram%2F11%2F', status_code=302) #Check that the program redirect to login
 
     def test_program_logged(self):
         self.client.login(username='Test User1', password='secret')

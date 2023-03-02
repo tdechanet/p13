@@ -3,10 +3,12 @@
 {% block title %}Accueil{% endblock %}
 {% load static %}
 {% block content %}
+{% if user.is_authenticated %}
 {% if programs|length == 0 %}
-<p class="mt-5 text-center">Vous n'avez pas encore de programme. Rajoutez en un avec le bouton "Nouveau Programme".</p>
-{% else %}
-    {% for program in programs %}
+<p class="mt-5 text-center">Vous ne suivez personne. Pour trouver des utilisateurs à suivre, utilisez la barre de recherche dans la navigation.</p>
+{% endif %}
+{% for author in programs %}
+    {% for program in author %}
         <div class="card mt-5 mx-5">
             <div class="container-fluid">
                 <div class="card-header row d-flex">
@@ -29,6 +31,8 @@
             </div>
         </div>
     {% endfor %}
+{% endfor %}
+{% else %}
+<p class="ms-4 mt-4">Pour suivre des programmes, vous devez <a href="{% url 'login' %}">vous connecter</a>.</p>
 {% endif %}
-    </div>
 {% endblock %}

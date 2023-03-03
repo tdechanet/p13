@@ -7,6 +7,11 @@ class CustomUser(AbstractUser):
     username = models.CharField(('Nom d\'utilisateur'), max_length=25, unique=True)
     email = models.EmailField(('Adresse email'), unique=True)
 
+    def followers_number(self):
+        """This method is used to count the number of followers a user have."""
+        followers = Following.objects.filter(author=self.pk)
+        return followers.count()
+
 
 class Following(models.Model):
     """This class is used to let a user follower another user."""

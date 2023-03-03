@@ -54,17 +54,20 @@ def profile(request, user_id=None):
         if 'program_delete' in request.POST:
             return redirect('delete_program', program_id=program_selected.pk)
 
-
     # getting the number of followers of the user
     number_of_followers = CustomUser.objects.filter(authors=request.user.pk).count()
 
     # checking if the user is the owner of the profile
     is_owner = request.user.pk == selected_user_id
+    
+    # getting the username of the profile owner
+    username = CustomUser.objects.get(pk=selected_user_id).username
 
     context = {
         "followers": number_of_followers,
         "programs": programs,
-        "is_owner" : is_owner
+        "is_owner" : is_owner,
+        "username" : username
     }
 
     return render(request, 'main/profile.html', context)
@@ -127,6 +130,22 @@ def delete_session(request, session_id):
 
     # redirect to the profile
     return redirect('program', program_id=program_selected.pk)
+
+
+@login_required(login_url='/login/')
+def user_research(request):
+    query = request.GET.get("user_research_bar")
+    research_results = CustomUser.objects.filter(username__trigram_similar=query)
+    programs = Program.objects.filter(user_id=request.user.pk)
+    number_of_programs = programs.count()
+
+    context = {
+        "research_results" : research_results,
+        "number_of_programs" : number_of_programs
+    }
+
+    return render(request, 'main/research_page.html', context)
+
 
 def timedelta_no_hours(exercices):
     """Convert duration time in only minutes and seconds"""

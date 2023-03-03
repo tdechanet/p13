@@ -23,9 +23,9 @@
         </button>
         <div class="navbar-collapse collapse col-7 justify-content-end" id="navbarScroll">
           <div class="col row justify-content-sm-end justify-content-evenly">
-            <form class="col-xl-4 col-lg-5 col-md-6 col-sm-8  d-flex" role="search">
-              <input class="my-1 form-control" type="search" placeholder="Recherche d'utilisateur...">
-              <button class="btn research-logo" type="image"><img class="img-fluid" src="{% static 'image/magnifying_glass.svg' %}"/></button>
+            <form class="col-xl-4 col-lg-5 col-md-6 col-sm-8 d-flex" role="search" method="get" action="{% url 'research' %}">
+              <input class="my-1 form-control" name="user_research_bar" type="search" placeholder="Recherche d'utilisateur...">
+              <button class="btn research-logo" type="submit"><img class="img-fluid" src="{% static 'image/magnifying_glass.svg' %}"/></button>
             </form>
             <a class="logo" href="{% url 'profile' %}"><img class="img-fluid mt-2" src="{% static 'image/profile.svg' %}"/></a>
             {% if user.is_authenticated %}

@@ -111,9 +111,8 @@ def session(request, session_id):
     
     ExerciceFormset = modelformset_factory(Exercice, form=ExerciceForm)
     formset = ExerciceFormset(request.POST or None, queryset=exercices)
-
+    print(formset.errors)
     if formset.is_valid():
-        print("valid")
         for form in formset:
             print(form)
 

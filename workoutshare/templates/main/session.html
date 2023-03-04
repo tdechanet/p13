@@ -22,7 +22,11 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {{ formset.management_form }}
                         {% for form in formset %}
+                            {% for hidden in form.hidden_fields %}
+                                {{ hidden }}
+                            {% endfor %}
                             <tr>
                                 <td>{{ form.name }}</td>
                                 <td>{{ form.muscle_group_id }}</td>

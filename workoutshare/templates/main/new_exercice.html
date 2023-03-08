@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}{{ session.name }}{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container-fluid d-flex justify-content-around mt-5">
+    </div>
+    <div class="container-fluid">
+        <form method="post">
+            {% csrf_token %}
+            <div class="mt-5 mb-2 d-flex flex-row-reverse">
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="col-4">{{ session.name }}</th>
+                            <th class="col-2">Groupe</th>
+                            <th class="col-2">Séries</th>
+                            <th class="col-2">Répétitions</th>
+                            <th class="col-2">Repos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ form.name }}</td>
+                            <td>{{ form.muscle_group_id }}</td>
+                            <td>{{ form.sets }}</td>
+                            <td>{{ form.reps }}</td>
+                            <td>{{ form.cool }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="container-fluid d-flex justify-content-around mt-5">
+                <button class="btn btn-primary mb-5 d-none d-sm-block" type="submit" href="#" role="button">Valider</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

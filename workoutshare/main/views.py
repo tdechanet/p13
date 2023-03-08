@@ -1,9 +1,12 @@
 """This module is used to specify how a page is going to behave."""
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.http import Http404
+from django.forms.models import modelformset_factory
 
 from authentication.models import Following #pylint: disable=E0401
 from .models import CustomUser, Program, Session, Exercice
+from .forms import ExerciceForm
 
 # Create your views here.
 
@@ -95,7 +98,6 @@ def program(request, program_id):
         # pointing to the right session
         session_id = request.POST.get('id')
         session = sessions[int(session_id)]
-
         return redirect('delete_session', session_id=session.pk)
 
     # building a dict of exercices for each sessions
@@ -120,6 +122,7 @@ def program(request, program_id):
 def delete_session(request, session_id):
     """This function is used to permit a user to delete his sessions."""
     session = get_object_or_404(Session, id=session_id) # getting session
+    
     program_selected = Program.objects.get(id=session.program_id.pk) # getting program
     # verifying that the session belong to the connected user
     if program_selected.user_id == request.user:
@@ -127,6 +130,77 @@ def delete_session(request, session_id):
 
     # redirect to the profile
     return redirect('program', program_id=program_selected.pk)
+
+
+def session(request, session_id):
+    """This function is used to permit a user to modify or create sessions."""
+    session = get_object_or_404(Session, id=session_id) # getting session
+    if session.get_owner() != request.user: # verifying that the session belong to the connected user 
+        raise Http404()
+
+    exercices = Exercice.objects.filter(session_id=session.pk)
+    exercices = timedelta_no_hours(exercices)
+
+    if request.method == 'POST':
+
+        # pointing to the right program
+        exercice_id = request.POST.get('id')
+        exercice = exercices[int(exercice_id)]
+        # redirect to delete url
+        return redirect('delete_exercice', exercice_id=exercice.pk)
+    
+    ExerciceFormset = modelformset_factory(Exercice, form=ExerciceForm, extra=0)
+    formset = ExerciceFormset(request.POST or None, queryset=exercices)
+    if formset.is_valid():
+        for form in formset:
+            row = form.save(commit=False)
+            if row.session_id == None:
+                row.session_id = session.pk
+            row.save()
+
+    context = {
+        "session" : session,
+        "formset" : formset
+    }
+
+    return render(request, 'main/session.html', context)
+
+
+def delete_exercice(request, exercice_id):
+    """This function is used to permit a user to delete one of his exercices."""
+    exercice = get_object_or_404(Exercice, id=exercice_id) # getting exercice
+    session = exercice.session_id # getting session
+    program = session.program_id # getting program
+    
+    if program.user_id == request.user: # verifying that the exercice belong to the connected user
+        exercice.delete()
+
+    # redirect to the session
+    return redirect('session', session_id=session.id)
+
+
+def new_exercice(request, session_id):
+    """This function is used to permit a user to add a new exercice to a session."""
+    session = get_object_or_404(Session, id=session_id) # getting session
+    if session.get_owner() != request.user: # verifying that the session belong to the connected user 
+        raise Http404()
+
+    form = ExerciceForm(request.POST or None)
+
+    if form.is_valid():
+        row = form.save(commit=False)
+        row.session_id = session
+        row.save()
+        
+        return redirect('session', session_id=session.pk)
+
+    context = {
+        "session" : session,
+        "form" : form
+    }
+
+    return render(request, 'main/new_exercice.html', context )
+
 
 def timedelta_no_hours(exercices):
     """Convert duration time in only minutes and seconds"""

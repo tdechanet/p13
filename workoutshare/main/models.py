@@ -1,9 +1,8 @@
 """This module is used to specify tables in the database for the main part of the app."""
-from django.db import models
-from authentication.models import CustomUser #pylint: disable=E0401
-from django.core.validators import MaxValueValidator
 from datetime import timedelta
-
+from django.db import models
+from django.core.validators import MaxValueValidator
+from authentication.models import CustomUser #pylint: disable=E0401
 # Create your models here.
 
 class Program(models.Model):

@@ -4,45 +4,70 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.forms.models import modelformset_factory
 
+from authentication.models import Following #pylint: disable=E0401
 from .models import CustomUser, Program, Session, Exercice
 from .forms import ExerciceForm
 
 # Create your views here.
 
+def home(request):
+    """This function is used to show to a user all the programs he follows."""
+
+    following_program_list = []
+
+    if request.user.is_authenticated:
+        # if the user is connected, we establish the list of the users he follow
+        follows = Following.objects.filter(follower=request.user)
+
+        # then, we fill the list of the published programs of the followed users
+        for follow in follows:
+            programs = Program.objects.filter(user_id=follow.author, published=1)
+            following_program_list.append(programs)
+
+    context = {
+        "programs" : following_program_list
+    }
+
+    return render (request, 'main/home.html', context)
+
+
 @login_required(login_url='/login/')
-def profile(request):
+def profile(request, user_id=None):
     """This function is used to show to a user all his programs."""
 
-    # getting the number of followers of the user
-    number_of_followers = CustomUser.objects.filter(authors=request.user.id).count()
+    # if a user id as been specified in the url we use it, else we use the id of the connected user
+    selected_user_id = user_id if user_id else request.user.pk
 
     # getting the programs of the user
-    programs = Program.objects.filter(user_id=request.user.id).order_by('name')
+    programs = Program.objects.filter(user_id=selected_user_id).order_by('name')
 
     if request.method == 'POST':
 
         # pointing to the right program
         program_id = request.POST.get('id')
-        program = programs[int(program_id)]
+        program_selected = programs[int(program_id)]
 
         if 'program_publish' in request.POST:
-            form = request.POST.get('program_publish')
 
             # reverse published state
-            if form == "True":
-                program.published = False
-            else:
-                program.published = True
-
-            program.save()
+            program_selected.published = not program_selected.published
+            program_selected.save()
 
         # redirect to delete url
         if 'program_delete' in request.POST:
-            return redirect('delete_program', program_id=program.id)
+            return redirect('delete_program', program_id=program_selected.pk)
+
+
+    # getting the number of followers of the user
+    number_of_followers = CustomUser.objects.filter(authors=request.user.pk).count()
+
+    # checking if the user is the owner of the profile
+    is_owner = request.user.pk == selected_user_id
 
     context = {
         "followers": number_of_followers,
         "programs": programs,
+        "is_owner" : is_owner
     }
 
     return render(request, 'main/profile.html', context)
@@ -50,10 +75,10 @@ def profile(request):
 
 def delete_program(request, program_id):
     """This function is used to permit a user to delete his programs."""
-    program = get_object_or_404(Program, id=program_id) # getting program
-
-    if program.user_id == request.user: # verifying that the program belong to the connected user
-        program.delete()
+    program_selected = get_object_or_404(Program, id=program_id) # getting program
+    # verifying that the program belong to the connected user
+    if program_selected.user_id == request.user:
+        program_selected.delete()
 
     # redirect to the profile
     return redirect('profile')
@@ -63,26 +88,32 @@ def delete_program(request, program_id):
 def program(request, program_id):
     """This function is used to show the details of a program."""
 
-    program = get_object_or_404(Program, id=program_id) # getting program
-    sessions = Session.objects.filter(program_id=program_id)
-    sessions_dic = {}
+    program_selected = get_object_or_404(Program, id=program_id) # getting program
+    program_selected_name = program_selected.name
 
-    for session in sessions:
-        exercices = Exercice.objects.filter(session_id=session.id)
-        exercices = timedelta_no_hours(exercices)
-        sessions_dic[session] = exercices
+    sessions = Session.objects.filter(program_id=program_id) # getting the sessions in the program
 
     if request.method == 'POST':
 
         # pointing to the right session
         session_id = request.POST.get('id')
         session = sessions[int(session_id)]
+        return redirect('delete_session', session_id=session.pk)
 
-        return redirect('delete_session', session_id=session.id)
+    # building a dict of exercices for each sessions
+    sessions_dic = {}
+    for session in sessions:
+        exercices = Exercice.objects.filter(session_id=session.pk)
+        exercices_fixed_time = timedelta_no_hours(exercices)
+        sessions_dic[session.name] = exercices_fixed_time
+
+    # checking if the user is the owner of the program
+    is_owner = request.user == program_selected.user_id
 
     context = {
-        "program" : program,
-        "sessions" : sessions_dic
+        "program" : program_selected_name,
+        "sessions" : sessions_dic,
+        "is_owner" : is_owner
     }
 
     return render(request, 'main/program.html', context)
@@ -91,13 +122,14 @@ def program(request, program_id):
 def delete_session(request, session_id):
     """This function is used to permit a user to delete his sessions."""
     session = get_object_or_404(Session, id=session_id) # getting session
-    program = session.program_id # getting program
-
-    if program.user_id == request.user: # verifying that the session belong to the connected user
+    
+    program_selected = Program.objects.get(id=session.program_id.pk) # getting program
+    # verifying that the session belong to the connected user
+    if program_selected.user_id == request.user:
         session.delete()
 
     # redirect to the profile
-    return redirect('program', program_id=program.id)
+    return redirect('program', program_id=program_selected.pk)
 
 
 def session(request, session_id):

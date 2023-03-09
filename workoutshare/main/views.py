@@ -136,12 +136,15 @@ def delete_session(request, session_id):
 def user_research(request):
     query = request.GET.get("user_research_bar")
     research_results = CustomUser.objects.filter(username__trigram_similar=query)
-    programs = Program.objects.filter(user_id=request.user.pk)
-    number_of_programs = programs.count()
+
+    users_details = []
+
+    for user in research_results:
+        programs = Program.objects.filter(user_id=user)
+        users_details.append((user, programs.count()))
 
     context = {
-        "research_results" : research_results,
-        "number_of_programs" : number_of_programs
+        "users_details" : users_details
     }
 
     return render(request, 'main/research_page.html', context)

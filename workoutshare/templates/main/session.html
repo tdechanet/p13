@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block title %}{{ session.name }}{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container-fluid d-flex flex-row-reverse mt-5">
+        <a href="{% url 'new_exercice' session_id=session.pk %}"><button class="btn btn-primary me-5" role="button">Nouvel exercice</button></a>
+    </div>
+    <div class="container-fluid">
+        <form method="post">
+            {% csrf_token %}
+            <div class="mt-5 mb-2 d-flex flex-row-reverse">
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="col-4">{{ session.name }}</th>
+                            <th class="col-2">Groupe</th>
+                            <th class="col-2">Séries</th>
+                            <th class="col-2">Répétitions</th>
+                            <th class="col-2">Repos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ formset.management_form }}
+                        {% for form in formset %}
+                            {% for hidden in form.hidden_fields %}
+                                {{ hidden }}
+                            {% endfor %}
+                            <tr>
+                                <td>{{ form.name }}</td>
+                                <td>{{ form.muscle_group_id }}</td>
+                                <td>{{ form.sets }}</td>
+                                <td>{{ form.reps }}</td>
+                                <td class="d-flex justify-content-between">{{ form.cool }}
+                                    <label class="pointer-image">
+                                        <img title="Supprimer l'exercice" class="card-logo img-fluid mt-2" src="{% static 'image/delete.svg' %}"/>
+                                        <button type="button" class="hidden-submit" data-bs-toggle="modal" data-bs-target="#modal{{ forloop.counter0 }}"></button>
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="modal{{ forloop.counter0 }}" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h3 class="modal-title fs-5" id="modalLabel">{{ exercice.name }}</h3>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>Voulez vous vraiment supprimer l'exercice ?</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                        <button class="btn btn-primary" type="submit" name="exercice_delete" data-bs-dismiss="modal">Supprimer</button>
+                                                        <input type="hidden" value="{{ forloop.counter0 }}" name="id">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="container-fluid d-flex justify-content-around mt-5">
+                <button class="btn btn-primary mb-5" type="submit" href="#" role="button">Valider</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

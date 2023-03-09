@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Recherche{% endblock %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid d-flex justify-content-around mt-5">
+        <form class="col-xl-4 col-lg-5 col-md-6 col-sm-8 d-flex" role="search" method="get" action="{% url 'research' %}">
+            <input class="my-1 form-control" name="user_research_bar" type="search" placeholder="Recherche d'utilisateur...">
+            <button class="btn research-logo" type="submit"><img class="img-fluid" src="{% static 'image/magnifying_glass.svg' %}"/></button>
+          </form>
+    </div>
+    <div class="container">
+        {% if users_details|length == 0 %}
+            <p class="mt-5 text-center">Aucun nom d'utilisateur ne correspond à cette recherche.</p>
+        {% else %}
+            <div class="row">
+                {% for user, programs_count in users_details %}
+                    <div class="mt-5 col-md-6 col-12">
+                        <div class="card row col-12 m-3">
+                            <div class="card-header d-flex">
+                                <a class="card-title fs-2" href="{% url 'profile' user_id=user.pk %}"><h3>{{ user.username }}</h3></a>
+                            </div>
+                            <div class="card-body row text-center">
+                                <p class="col-xl-6 col-md-12 col-sm-6 col-12 card-text fs-2">{{ programs_count }} programmes</p>
+                                <p class="col-xl-6 col-md-12 col-sm-6 col-12 card-text fs-2">{{ user.followers_number }} followers</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

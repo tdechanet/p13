@@ -3,14 +3,25 @@
 {% block title %}{{ username }}{% endblock %}
 {% load static %}
 {% block content %}
+    <div class="container-fluid d-flex justify-content-center mt-5">
+        <h2>{{ username }}</h2>
+    </div>
     <div class="container-fluid d-flex justify-content-around mt-5">
         {% if is_owner %}
-            <button class="btn btn-primary d-none d-sm-block" href="#" role="button">Nouveau programme</button>
-            <button title="Ajouter un nouveau programme" class="btn btn-primary d-block d-sm-none" href="#" role="button">+</button>
+            <a href="#">
+                <button class="btn btn-primary d-none d-sm-block" role="button">Nouveau programme</button>
+                <button title="Ajouter un nouveau programme" class="btn btn-primary d-block d-sm-none" role="button">+</button>
+            </a>
         {% else %}
-            <button class="btn btn-primary" href="#" role="button">Suivre</button>
+            <form method="post">
+                {% csrf_token %}
+                {% if is_following %}
+                    <button class="btn" type="submit" name="user_follow" value="{{ is_following }}" role="button">Suivre</button>   
+                {% else %}
+                    <button class="btn follow-btn-gray" type="submit" name="user_follow" value="{{ is_following }}" role="button">Suivre</button>  
+                {% endif %}
+            </form>
         {% endif %}
-        <h2>{{ username }}</h2>
         <p class="align-middle">{{ followers }} followers</p>
     </div>
     <div class="container-fluid">

@@ -1,7 +1,7 @@
 """This module is used to specify tables in the database for the main part of the app."""
 from datetime import timedelta
 from django.db import models
-from django.core.validators import MaxValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 from authentication.models import CustomUser #pylint: disable=E0401
 # Create your models here.
 
@@ -61,10 +61,17 @@ class Exercice(models.Model):
     session_id = models.ForeignKey(Session, on_delete=models.CASCADE)
     muscle_group_id = models.ForeignKey(MuscleGroup, on_delete=models.PROTECT)
     name = models.CharField(max_length=45)
-    sets = models.IntegerField(default=4)
-    reps = models.IntegerField(default=12)
+    sets = models.IntegerField(default=4, validators=[
+        MaxValueValidator(99),
+        MinValueValidator(1)
+    ])
+    reps = models.IntegerField(default=12, validators=[
+        MaxValueValidator(999),
+        MinValueValidator(1)
+    ])
     cool = models.DurationField(default="3:00", validators=[
-        MaxValueValidator(timedelta(minutes=9, seconds=59))
+        MaxValueValidator(timedelta(minutes=9, seconds=59)),
+        MinValueValidator(timedelta(minutes=0, seconds=0))
     ])
 
     def __str__(self):

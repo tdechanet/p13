@@ -1,31 +1,28 @@
 {% extends "base.html" %}
 
-{% block title %}{{ program.name }}{% endblock %}
+{% block title %}{{ program_name }}{% endblock %}
 {% load static %}
+{% load crispy_forms_tags %}
 {% block content %}
     <div class="container-fluid d-flex justify-content-around mt-5">
-        <h2>{{ program.name }}</h2>
+        <h2>{{ program_name }}</h2>
     </div>
     <div class="container-fluid">
-        {% for session_name, exercices in sessions.items %}
+        {% for session, exercices in sessions_list %}
             <div class="mt-5 mb-2 d-flex flex-row-reverse">
                 {% if is_owner %}
                 <form method="post">
                     {% csrf_token %}
-                    <label class="pointer-image">
-                        <img title="Modifier la séance" class="card-logo img-fluid mt-2" src="{% static 'image/edit.svg' %}">
-                        <input class="hidden-submit" type="submit" name="session_edit">
-                        <input type="hidden" value="{{ forloop.counter0 }}" name="id">
-                    </label>
+                    <a href="{% url 'session' session.pk %}"><img title="Modifier la séance" class="card-logo img-fluid mt-2" src="{% static 'image/edit.svg' %}"></a>
                     <label class="pointer-image">
                         <img title="Supprimer la session" class="card-logo img-fluid mt-2" src="{% static 'image/delete.svg' %}"/>
                         <button type="button" class="hidden-submit" data-bs-toggle="modal" data-bs-target="#modal{{ forloop.counter0 }}"></button>
-                        <!-- Modal -->
+                        <!-- Modal delete session -->
                         <div class="modal fade" id="modal{{ forloop.counter0 }}" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h3 class="modal-title fs-5" id="modalLabel">{{ session_name }}</h3>
+                                        <h3 class="modal-title fs-5" id="modalLabel">{{ session.name }}</h3>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
@@ -48,7 +45,6 @@
                     <thead>
                         <tr>
                             <th class="col-4">{{ session.name }}</th>
-                            <th class="col-4">{{ session_name }}</th>
                             <th class="col-2">Groupe</th>
                             <th class="col-2">Séries</th>
                             <th class="col-2">Répétitions</th>
@@ -71,7 +67,29 @@
         {% endfor %}
         {% if is_owner %}
         <div class="container-fluid d-flex justify-content-around mt-5">
-            <button class="btn btn-primary mb-5 d-none d-sm-block" href="#" role="button">Nouvelle séance</button>
+            <button class="btn btn-primary mb-5 d-none d-sm-block" type="button" data-bs-toggle="modal" data-bs-target="#modal-new-session">Nouvelle séance</button>
+            <!-- Modal delete session -->
+            <div class="modal fade" id="modal-new-session" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title fs-5" id="modalLabel">{{ session_name }}</h3>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <p>Comment souhaitez vous appeler la nouvelle session ?</p>
+                                {% csrf_token %}{{session_form|crispy}}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                <button class="btn btn-primary" type="submit" name="new_session">Valider</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
         {% endif %}
     </div>

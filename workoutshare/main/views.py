@@ -24,6 +24,12 @@ def home(request):
     return render (request, 'main/home.html', context)
 
 
+def legal_mention(request):
+    """This function is used to show the legal-mention page."""
+
+    return render (request, 'legal_mention.html')
+
+
 @login_required(login_url='/login/')
 def profile(request, user_id=None):
     """This function is used to show to a user all his programs."""

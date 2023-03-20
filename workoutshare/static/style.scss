@@ -5,7 +5,11 @@ html {
 	font-family: 'Montserrat';
 }
 
-nav {
+.content {
+	min-height: calc(100vh - 50px);
+}
+
+nav, footer {
 	background-color: $primary;
 	color: #FFFFFF;
 }
@@ -79,3 +83,8 @@ td {
 	overflow: auto;
 	white-space: nowrap;
 }
+
+.footer {
+	height: 50px;
+	margin-top: 10px;
+  }

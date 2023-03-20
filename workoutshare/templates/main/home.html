@@ -4,34 +4,33 @@
 {% load static %}
 {% block content %}
 {% if user.is_authenticated %}
-{% if programs|length == 0 %}
-<p class="mt-5 text-center">Vous ne suivez personne. Pour trouver des utilisateurs à suivre, utilisez la barre de recherche dans la navigation.</p>
-{% endif %}
-{% for author in programs %}
-    {% for program in author %}
-        <div class="card mt-5 mx-5">
-            <div class="container-fluid">
-                <div class="card-header row d-flex">
-                    <a class="card-title col-sm-8 col-12 text-sm-start text-center fs-2" href="{% url 'program' program.pk %}"><h3>{{ program.name }}</h3></a>
-                    
+    {% if programs|length is 0 %}
+        <p class="mt-5 text-center">Vous ne suivez personne. Pour trouver des utilisateurs à suivre, utilisez la barre de recherche dans la navigation.</p>
+    {% else %}
+        {% for program in programs %}
+                <div class="card mt-5 mx-5">
+                    <div class="container-fluid">
+                        <div class="card-header row d-flex">
+                            <a class="card-title col-sm-8 col-12 text-sm-start text-center fs-2" href="{% url 'program' program.pk %}"><h3>{{ program.name }}</h3></a>
+                            
+                        </div>
+                    </div>
+                    <div class="card-body row">
+                        <div class="row col-xl-6 col-md-4 col-12">
+                            <p class="my-xl-4 col-xl-6 col-md-12 col-sm-6 col-12 card-text fs-2">{{ program.session_number }} séances</p>
+                            <p class="my-xl-4 mb-sm-0 mb-3 col-xl-6 col-md-12 col-sm-6 col-12 card-text fs-2">{{ program.get_exercice_number }} exercices</p>
+                        </div>
+                        <div class="row col">
+                            {% if program.description %}
+                                <p readonly class="card-text">{{ program.description }}</p>
+                            {% else %}
+                                <p readonly class="card-text">L'auteur n'a pas renseigné de description pour ce programme.</p>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="card-body row">
-                <div class="row col-xl-6 col-md-4 col-12">
-                    <p class="my-xl-4 col-xl-6 col-md-12 col-sm-6 col-12 card-text fs-2">{{ program.session_number }} séances</p>
-                    <p class="my-xl-4 mb-sm-0 mb-3 col-xl-6 col-md-12 col-sm-6 col-12 card-text fs-2">{{ program.get_exercice_number }} exercices</p>
-                </div>
-                <div class="row col">
-                    {% if program.description %}
-                        <p readonly class="card-text">{{ program.description }}</p>
-                    {% else %}
-                        <p readonly class="card-text">L'auteur n'a pas renseigné de description pour ce programme.</p>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    {% endfor %}
-{% endfor %}
+        {% endfor %}
+    {% endif %}
 {% else %}
 <p class="ms-4 mt-4">Pour suivre des programmes, vous devez <a href="{% url 'login' %}">vous connecter</a>.</p>
 {% endif %}

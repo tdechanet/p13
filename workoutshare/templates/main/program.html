@@ -67,8 +67,8 @@
         {% endfor %}
         {% if is_owner %}
         <div class="container-fluid d-flex justify-content-around mt-5">
-            <button class="btn btn-primary mb-5 d-none d-sm-block" type="button" data-bs-toggle="modal" data-bs-target="#modal-new-session">Nouvelle séance</button>
-            <!-- Modal delete session -->
+            <button class="btn btn-primary mb-5" type="button" data-bs-toggle="modal" data-bs-target="#modal-new-session">Nouvelle séance</button>
+            <!-- Modal new session -->
             <div class="modal fade" id="modal-new-session" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -80,7 +80,7 @@
                             {% csrf_token %}
                             <div class="modal-body">
                                 <p>Comment souhaitez vous appeler la nouvelle session ?</p>
-                                {% csrf_token %}{{session_form|crispy}}
+                                {% csrf_token %}{{ session_form|crispy }}
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>

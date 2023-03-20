@@ -6,26 +6,19 @@ from django.forms.models import modelformset_factory
 
 from authentication.models import Following #pylint: disable=E0401
 from .models import CustomUser, Program, Session, Exercice
-from .forms import ExerciceForm, SessionForm
+from .forms import ExerciceForm, SessionForm, ProgramForm
 
 # Create your views here.
 
+
+@login_required(login_url='/login/')
 def home(request):
     """This function is used to show to a user all the programs he follows."""
 
-    following_program_list = []
-
-    if request.user.is_authenticated:
-        # if the user is connected, we establish the list of the users he follow
-        follows = Following.objects.filter(follower=request.user)
-
-        # then, we fill the list of the published programs of the followed users
-        for follow in follows:
-            programs = Program.objects.filter(user_id=follow.author, published=1)
-            following_program_list.append(programs)
+    programs = Program.objects.filter(user_id__authors__follower=request.user, published=1).order_by('-updated_at')
 
     context = {
-        "programs" : following_program_list
+        "programs" : programs
     }
 
     return render (request, 'main/home.html', context)
@@ -54,13 +47,25 @@ def profile(request, user_id=None):
         except Following.DoesNotExist:
             follow_row = None
 
+    new_program_form = ProgramForm(request.POST or None)
+
     if request.method == 'POST':
+    
+        if 'new_program' in request.POST:
+            if is_owner:
+                if new_program_form.is_valid():
+                    new_program_form_raw = new_program_form.save(commit=False)
+                    new_program_form_raw.user_id = request.user
+                    new_program_form_raw.save()
+                    return redirect('program', program_id=new_program_form_raw.id)
 
         if 'user_follow' in request.POST:
-
             # reverse following state
+            is_following = not is_following
+
             if follow_row:
                 follow_row.delete()
+
             else:
                 follow_row = Following(author=selected_user, follower=request.user)
                 follow_row.save()
@@ -81,18 +86,24 @@ def profile(request, user_id=None):
             if 'program_delete' in request.POST:
                 return redirect('delete_program', program_id=program_selected.pk)
 
+    followers = []
+
     # getting the number of followers of the user
-    number_of_followers = CustomUser.objects.filter(authors=request.user.pk).count()
+    follow_row = Following.objects.filter(author=selected_user)
+    for link in follow_row:
+        followers.append(link.follower)
+
 
     # getting the username of the profile owner
     username = selected_user.username
 
     context = {
-        "followers": number_of_followers,
+        "followers": followers,
         "programs": programs,
         "is_owner" : is_owner,
         "is_following" : is_following,
-        "username" : username
+        "username" : username,
+        "program_form" : new_program_form
     }
 
     return render(request, 'main/profile.html', context)
@@ -195,7 +206,10 @@ def session(request, session_id):
     ExerciceFormset = modelformset_factory(Exercice, form=ExerciceForm, extra=0)
     formset = ExerciceFormset(request.POST or None, queryset=exercices)
 
+    session_name_form = SessionForm(request.POST or None, instance=session)
+
     if request.method == 'POST':
+
         if 'exercice_delete' in request.POST:
             # pointing to the right program
             exercice_id = request.POST.get('id')
@@ -204,17 +218,19 @@ def session(request, session_id):
             return redirect('delete_exercice', exercice_id=exercice.pk)
         
         if 'save_session' in request.POST:
-            if formset.is_valid():
+            if formset.is_valid() and session_name_form.is_valid():
                 for form in formset:
                     row = form.save(commit=False)
                     if row.session_id == None:
                         row.session_id = session.pk
                     row.save()
+                    session_name_form.save()
                 return redirect('program', program_id = session.program_id.pk)
 
     context = {
         "session" : session,
-        "formset" : formset
+        "formset" : formset,
+        "session_form" : session_name_form
     }
 
     return render(request, 'main/session.html', context)

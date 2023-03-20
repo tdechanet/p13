@@ -1,6 +1,6 @@
 from crispy_forms.helper import FormHelper
 from django.forms import ModelForm
-from main.models import Exercice, Session
+from main.models import Exercice, Session, Program
 
 
 class ExerciceForm(ModelForm):
@@ -17,5 +17,12 @@ class ExerciceForm(ModelForm):
 class SessionForm(ModelForm):
     class Meta:
         model = Session
+        fields = ['name']
+        labels = {"name": ""}
+
+
+class ProgramForm(ModelForm):
+    class Meta:
+        model = Program
         fields = ['name']
         labels = {"name": ""}

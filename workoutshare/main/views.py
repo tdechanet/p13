@@ -140,6 +140,8 @@ def program(request, program_id):
 
     new_session_form = SessionForm(request.POST or None)
 
+    modify_program_name_form = ProgramForm(request.POST or None, instance=program_selected)
+
     if request.method == 'POST':
 
         if 'session_delete' in request.POST:
@@ -156,6 +158,12 @@ def program(request, program_id):
                     new_session_form_raw.save()
                     return redirect('session', session_id=new_session_form_raw.id)
 
+        if 'modify_program_name' in request.POST:
+            if is_owner:
+                if modify_program_name_form.is_valid():
+                    modify_program_name_form.save()
+                    return redirect('program', program_id=program_selected.pk)
+
     # building a dict of exercices for each sessions
     sessions_list = []
     for session in sessions:
@@ -167,7 +175,8 @@ def program(request, program_id):
         "program_name" : program_selected_name,
         "sessions_list" : sessions_list,
         "is_owner" : is_owner,
-        "session_form" : new_session_form
+        "session_form" : new_session_form,
+        "program_name_form" : modify_program_name_form
     }
 
     return render(request, 'main/program.html', context)

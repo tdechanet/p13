@@ -4,8 +4,27 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block content %}
-    <div class="container-fluid d-flex justify-content-around mt-5">
+    <div class="container-fluid d-flex justify-content-center mt-5">
         <h2>{{ program_name }}</h2>
+        <img title="Modifier le nom" class="card-logo img-fluid mt-2 pointer-image" src="{% static 'image/edit.svg' %}"  data-bs-toggle="modal" data-bs-target="#modal-modify-program-name">
+            <!-- Modal modify program name -->
+            <div class="modal fade" id="modal-modify-program-name" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <p>Comment souhaitez vous renommer le programme ?</p>
+                                {% csrf_token %}{{ program_name_form|crispy }}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                <button class="btn btn-primary" type="submit" name="modify_program_name">Valider</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
     </div>
     <div class="container-fluid">
         {% for session, exercices in sessions_list %}
@@ -72,10 +91,6 @@
             <div class="modal fade" id="modal-new-session" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <h3 class="modal-title fs-5" id="modalLabel">{{ session_name }}</h3>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
                         <form method="post">
                             {% csrf_token %}
                             <div class="modal-body">

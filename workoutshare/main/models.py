@@ -31,6 +31,12 @@ class Program(models.Model):
         return exercice_number
 
 
+class Favorite(models.Model):
+    """This class is used to let a user add program to his favorites."""
+    program_id = models.ForeignKey(Program, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+
+
 class Session(models.Model):
     """This class is used to describe the session in the programs users can add."""
     program_id = models.ForeignKey(Program, on_delete=models.CASCADE)

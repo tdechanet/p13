@@ -5,7 +5,7 @@ from django.http import Http404
 from django.forms.models import modelformset_factory
 
 from authentication.models import Following #pylint: disable=E0401
-from .models import CustomUser, Program, Session, Exercice
+from .models import CustomUser, Program, Session, Exercice, Favorite
 from .forms import ExerciceForm, SessionForm, ProgramForm
 
 # Create your views here.
@@ -31,6 +31,27 @@ def legal_mention(request):
 
 
 @login_required(login_url='/login/')
+def favorite(request):
+    """This fuction is used to show to a user his favorites programs."""
+    
+    favorites = Program.objects.filter(favorite__user_id=request.user)
+
+
+    if request.method == 'POST':
+        # pointing to the right program
+        program_id = request.POST.get('id')
+        program_selected = favorites[int(program_id)]
+        favorite_selected = Favorite.objects.get(program_id=program_selected)
+        favorite_selected.delete()
+
+    context = {
+        "favorites" : favorites
+    }
+
+    return render(request, 'main/favorite.html', context)
+
+
+@login_required(login_url='/login/')
 def profile(request, user_id=None):
     """This function is used to show to a user all his programs."""
 
@@ -53,6 +74,13 @@ def profile(request, user_id=None):
         except Following.DoesNotExist:
             follow_row = None
 
+        # we also check if some of the programs are his favorites
+        for program in programs:
+            try:
+                program.favorites = Favorite.objects.get(program_id=program, user_id=request.user)
+            except Favorite.DoesNotExist:
+                program.favorites = False
+    
     new_program_form = ProgramForm(request.POST or None)
 
     if request.method == 'POST':
@@ -65,9 +93,8 @@ def profile(request, user_id=None):
                     new_program_form_raw.save()
                     return redirect('program', program_id=new_program_form_raw.id)
 
-        if 'user_follow' in request.POST:
+        elif 'user_follow' in request.POST:
             # reverse following state
-            is_following = not is_following
 
             if follow_row:
                 follow_row.delete()
@@ -83,14 +110,24 @@ def profile(request, user_id=None):
             program_selected = programs[int(program_id)]
 
             if 'program_publish' in request.POST:
+                if is_owner:
+                    # reverse published state
+                    program_selected.published = not program_selected.published
+                    program_selected.save()
 
-                # reverse published state
-                program_selected.published = not program_selected.published
-                program_selected.save()
+            if 'program_favorite' in request.POST:
+                # reverse favorite state
+                if program_selected.favorites:
+                    program_selected.favorites.delete()
+                else:
+                    new_favorite = Favorite(program_id=program_selected, user_id=request.user)
+                    new_favorite.save()
 
             # redirect to delete url
             if 'program_delete' in request.POST:
                 return redirect('delete_program', program_id=program_selected.pk)
+
+        return redirect('profile', user_id=selected_user_id)
 
     followers = []
 
@@ -109,7 +146,7 @@ def profile(request, user_id=None):
         "is_owner" : is_owner,
         "is_following" : is_following,
         "username" : username,
-        "program_form" : new_program_form
+        "program_form" : new_program_form,
     }
 
     return render(request, 'main/profile.html', context)

@@ -6,7 +6,9 @@
 {% block content %}
     <div class="container-fluid d-flex justify-content-center mt-5">
         <h2>{{ program_name }}</h2>
-        <img title="Modifier le nom" class="card-logo img-fluid mt-2 pointer-image" src="{% static 'image/edit.svg' %}"  data-bs-toggle="modal" data-bs-target="#modal-modify-program-name">
+        {% if is_owner %}
+            <img title="Modifier le nom" class="card-logo img-fluid mt-2 pointer-image" src="{% static 'image/edit.svg' %}"  data-bs-toggle="modal" data-bs-target="#modal-modify-program-name">
+        {% endif %}
             <!-- Modal modify program name -->
             <div class="modal fade" id="modal-modify-program-name" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
                 <div class="modal-dialog">

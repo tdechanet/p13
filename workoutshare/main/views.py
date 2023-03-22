@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.forms.models import modelformset_factory
+from django.utils import timezone
 
 from authentication.models import Following #pylint: disable=E0401
 from .models import CustomUser, Program, Session, Exercice, Favorite
@@ -180,6 +181,9 @@ def program(request, program_id):
     modify_program_name_form = ProgramForm(request.POST or None, instance=program_selected)
 
     if request.method == 'POST':
+                
+        program_selected.updated_at = timezone.now()
+        program_selected.save()
 
         if 'session_delete' in request.POST:
             # pointing to the right session
@@ -261,6 +265,10 @@ def session(request, session_id):
     session_name_form = SessionForm(request.POST or None, instance=session)
 
     if request.method == 'POST':
+        
+        session_program = session.program_id
+        session_program.updated_at = timezone.now()
+        session_program.save()
 
         if 'exercice_delete' in request.POST:
             # pointing to the right program
@@ -314,6 +322,10 @@ def new_exercice(request, session_id):
         row.session_id = session
         row.save()
         
+        session_program = session.program_id
+        session_program.updated_at = timezone.now()
+        session_program.save()
+
         return redirect('session', session_id=session.pk)
 
     context = {

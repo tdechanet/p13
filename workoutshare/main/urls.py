@@ -7,7 +7,7 @@ APP_NAME = 'main'
 
 urlpatterns = [
     path('', views.home, name='home'),
-    path('legal-mention', views.legal_mention, name='legal-mention'),
+    path('legal-mention/', views.legal_mention, name='legal-mention'),
     path('favorite/', views.favorite, name='favorite'),
     path('profile/', views.profile, name='profile'),
     path('profile/<int:user_id>/', views.profile, name='profile'),

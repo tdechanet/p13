@@ -37,7 +37,6 @@ def favorite(request):
     
     favorites = Program.objects.filter(favorite__user_id=request.user)
 
-
     if request.method == 'POST':
         # pointing to the right program
         program_id = request.POST.get('id')
@@ -88,6 +87,7 @@ def profile(request, user_id=None):
     
         if 'new_program' in request.POST:
             if is_owner:
+                print("ui")
                 if new_program_form.is_valid():
                     new_program_form_raw = new_program_form.save(commit=False)
                     new_program_form_raw.user_id = request.user
@@ -236,19 +236,6 @@ def delete_session(request, session_id):
     return redirect('program', program_id=program_selected.pk)
 
 
-def create_session(request, program_pk, session_name):
-    program_selected = get_object_or_404(Program, id=program_pk) # getting program
-    # verifying that the program belong to the connected user
-    if program_selected.user_id == request.user:
-        new_session = Session(program_id=program_pk, name=session_name)
-        new_session.save()
-
-    else:
-        return redirect('profile')
-
-    return redirect('new_exercice', session_id=new_session.pk)
-
-
 @login_required(login_url='/login/')
 def session(request, session_id):
     """This function is used to permit a user to modify or create sessions."""
@@ -278,11 +265,10 @@ def session(request, session_id):
             return redirect('delete_exercice', exercice_id=exercice.pk)
         
         if 'save_session' in request.POST:
+            print(formset.errors)
             if formset.is_valid() and session_name_form.is_valid():
                 for form in formset:
                     row = form.save(commit=False)
-                    if row.session_id == None:
-                        row.session_id = session.pk
                     row.save()
                     session_name_form.save()
                 return redirect('program', program_id = session.program_id.pk)

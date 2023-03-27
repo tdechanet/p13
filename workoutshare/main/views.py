@@ -13,10 +13,12 @@ from .forms import ExerciceForm, SessionForm, ProgramForm
 
 
 @login_required(login_url='/login/')
-def home(request):
+def home_page(request):
     """This function is used to show to a user all the programs he follows."""
 
-    programs = Program.objects.filter(user_id__authors__follower=request.user, published=1).order_by('-updated_at')
+    programs = Program.objects.filter(
+        user_id__authors__follower=request.user,
+        published=1).order_by('-updated_at')
 
     context = {
         "programs" : programs
@@ -32,9 +34,9 @@ def legal_mention(request):
 
 
 @login_required(login_url='/login/')
-def favorite(request):
+def favorite_page(request):
     """This fuction is used to show to a user his favorites programs."""
-    
+
     favorites = Program.objects.filter(favorite__user_id=request.user)
 
     if request.method == 'POST':
@@ -52,7 +54,7 @@ def favorite(request):
 
 
 @login_required(login_url='/login/')
-def profile(request, user_id=None):
+def profile_page(request, user_id=None): #pylint: disable=R0914, disable=R0912
     """This function is used to show to a user all his programs."""
 
     # if a user id as been specified in the url we use it, else we use the id of the connected user
@@ -80,11 +82,11 @@ def profile(request, user_id=None):
                 program.favorites = Favorite.objects.get(program_id=program, user_id=request.user)
             except Favorite.DoesNotExist:
                 program.favorites = False
-    
+
     new_program_form = ProgramForm(request.POST or None)
 
     if request.method == 'POST':
-    
+
         if 'new_program' in request.POST:
             if is_owner:
                 if new_program_form.is_valid():
@@ -102,9 +104,9 @@ def profile(request, user_id=None):
             else:
                 follow_row = Following(author=selected_user, follower=request.user)
                 follow_row.save()
-        
+
         else:
-            
+
             # pointing to the right program
             program_id = request.POST.get('id')
             program_selected = programs[int(program_id)]
@@ -152,7 +154,7 @@ def profile(request, user_id=None):
     return render(request, 'main/profile.html', context)
 
 
-def delete_program(request, program_id):
+def delete_program_page(request, program_id):
     """This function is used to permit a user to delete his programs."""
     program_selected = get_object_or_404(Program, id=program_id) # getting program
     # verifying that the program belong to the connected user
@@ -164,7 +166,7 @@ def delete_program(request, program_id):
 
 
 @login_required(login_url='/login/')
-def program(request, program_id):
+def program_page(request, program_id):
     """This function is used to show the details of a program."""
 
     program_selected = get_object_or_404(Program, id=program_id) # getting program
@@ -180,7 +182,7 @@ def program(request, program_id):
     modify_program_name_form = ProgramForm(request.POST or None, instance=program_selected)
 
     if request.method == 'POST':
-                
+
         program_selected.updated_at = timezone.now()
         program_selected.save()
 
@@ -189,7 +191,7 @@ def program(request, program_id):
             session_id = request.POST.get('id')
             session = sessions[int(session_id)]
             return redirect('delete_session', session_id=session.pk)
-    
+
         if 'new_session' in request.POST:
             if is_owner:
                 if new_session_form.is_valid():
@@ -222,10 +224,10 @@ def program(request, program_id):
     return render(request, 'main/program.html', context)
 
 
-def delete_session(request, session_id):
+def delete_session_page(request, session_id):
     """This function is used to permit a user to delete his sessions."""
     session = get_object_or_404(Session, id=session_id) # getting session
-    
+
     program_selected = Program.objects.get(id=session.program_id.pk) # getting program
     # verifying that the session belong to the connected user
     if program_selected.user_id == request.user:
@@ -236,22 +238,22 @@ def delete_session(request, session_id):
 
 
 @login_required(login_url='/login/')
-def session(request, session_id):
+def session_page(request, session_id):
     """This function is used to permit a user to modify or create sessions."""
     session = get_object_or_404(Session, id=session_id) # getting session
-    if session.get_owner() != request.user: # verifying that the session belong to the connected user 
+    if session.get_owner() != request.user: #verifying that the session belong to the connected user
         raise Http404()
 
     exercices = Exercice.objects.filter(session_id=session.pk)
     exercices = timedelta_no_hours(exercices)
 
-    ExerciceFormset = modelformset_factory(Exercice, form=ExerciceForm, extra=0)
-    formset = ExerciceFormset(request.POST or None, queryset=exercices)
+    exercice_formset = modelformset_factory(Exercice, form=ExerciceForm, extra=0)
+    formset = exercice_formset(request.POST or None, queryset=exercices)
 
     session_name_form = SessionForm(request.POST or None, instance=session)
 
     if request.method == 'POST':
-        
+
         session_program = session.program_id
         session_program.updated_at = timezone.now()
         session_program.save()
@@ -262,7 +264,7 @@ def session(request, session_id):
             exercice = exercices[int(exercice_id)]
             # redirect to delete url
             return redirect('delete_exercice', exercice_id=exercice.pk)
-        
+
         if 'save_session' in request.POST:
             if formset.is_valid() and session_name_form.is_valid():
                 for form in formset:
@@ -280,12 +282,12 @@ def session(request, session_id):
     return render(request, 'main/session.html', context)
 
 
-def delete_exercice(request, exercice_id):
+def delete_exercice_page(request, exercice_id):
     """This function is used to permit a user to delete one of his exercices."""
     exercice = get_object_or_404(Exercice, id=exercice_id) # getting exercice
     session = exercice.session_id # getting session
     program = session.program_id # getting program
-    
+
     if program.user_id == request.user: # verifying that the exercice belong to the connected user
         exercice.delete()
 
@@ -293,10 +295,10 @@ def delete_exercice(request, exercice_id):
     return redirect('session', session_id=session.id)
 
 
-def new_exercice(request, session_id):
+def new_exercice_page(request, session_id):
     """This function is used to permit a user to add a new exercice to a session."""
     session = get_object_or_404(Session, id=session_id) # getting session
-    if session.get_owner() != request.user: # verifying that the session belong to the connected user 
+    if session.get_owner() != request.user: #verifying that the session belong to the connected user
         raise Http404()
 
     form = ExerciceForm(request.POST or None)
@@ -305,7 +307,7 @@ def new_exercice(request, session_id):
         row = form.save(commit=False)
         row.session_id = session
         row.save()
-        
+
         session_program = session.program_id
         session_program.updated_at = timezone.now()
         session_program.save()
@@ -321,7 +323,8 @@ def new_exercice(request, session_id):
 
 
 @login_required(login_url='/login/')
-def user_research(request):
+def user_research_page(request):
+    """This method permit the user to research other users."""
     query = request.GET.get("user_research_bar")
     research_results = CustomUser.objects.filter(username__trigram_similar=query)
 

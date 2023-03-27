@@ -49,7 +49,7 @@ class Session(models.Model):
         """This method is used to count the number of exercice a session have."""
         exercices_of_session = Exercice.objects.filter(session_id=self.id)
         return exercices_of_session.count()
-    
+
     def get_owner(self):
         """This method is used to get the owner of a session."""
         program = Program.objects.get(id=self.program_id.id)

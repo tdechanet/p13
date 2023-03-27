@@ -4,6 +4,7 @@ from .models import Program, Session, MuscleGroup, Exercice
 
 # Register your models here.
 class ProgramAdmin(admin.ModelAdmin):
+    """This class is used to let django know we want to see date field in admin"""
     readonly_fields = ('created_at', 'updated_at')
 
 admin.site.register(Program, ProgramAdmin)

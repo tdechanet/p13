@@ -9,6 +9,7 @@ jobs:
       - image: cimg/postgres:14.0
         environment:
           POSTGRES_USER: workoutshare_admin
+      - image: cimg/node:16.13.1-browsers
 
     steps:
       - checkout

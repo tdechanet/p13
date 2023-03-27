@@ -87,27 +87,27 @@
             </div>
         {% endfor %}
         {% if is_owner %}
-        <div class="container-fluid d-flex justify-content-around mt-5">
-            <button class="btn btn-primary mb-5" type="button" data-bs-toggle="modal" data-bs-target="#modal-new-session">Nouvelle séance</button>
-            <!-- Modal new session -->
-            <div class="modal fade" id="modal-new-session" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <form method="post">
-                            {% csrf_token %}
-                            <div class="modal-body">
-                                <p>Comment souhaitez vous appeler la nouvelle session ?</p>
-                                {% csrf_token %}{{ session_form|crispy }}
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                                <button class="btn btn-primary" type="submit" name="new_session">Valider</button>
-                            </div>
-                        </form>
+            <div class="container-fluid d-flex justify-content-around mt-5">
+                <button class="btn btn-primary mb-5" type="button" data-bs-toggle="modal" data-bs-target="#modal-new-session" name="new_session_modal">Nouvelle séance</button>
+                <!-- Modal new session -->
+                <div class="modal fade" id="modal-new-session" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="modal-body">
+                                    <p>Comment souhaitez vous appeler la nouvelle session ?</p>
+                                    {% crispy session_form session_form.helper %}
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                    <button class="btn btn-primary" type="submit" name="new_session">Valider</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         {% endif %}
     </div>
 {% endblock %}

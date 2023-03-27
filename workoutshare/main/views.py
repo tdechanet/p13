@@ -87,7 +87,6 @@ def profile(request, user_id=None):
     
         if 'new_program' in request.POST:
             if is_owner:
-                print("ui")
                 if new_program_form.is_valid():
                     new_program_form_raw = new_program_form.save(commit=False)
                     new_program_form_raw.user_id = request.user
@@ -265,7 +264,6 @@ def session(request, session_id):
             return redirect('delete_exercice', exercice_id=exercice.pk)
         
         if 'save_session' in request.POST:
-            print(formset.errors)
             if formset.is_valid() and session_name_form.is_valid():
                 for form in formset:
                     row = form.save(commit=False)

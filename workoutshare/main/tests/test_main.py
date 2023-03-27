@@ -1,9 +1,7 @@
 from django.test import TestCase, Client
-from django.http import Http404
 
 from authentication.models import CustomUser, Following
 from main.models import Program, Session, Exercice, MuscleGroup, Favorite
-from main.views import timedelta_no_hours
 
 
 class TestViewsMain(TestCase):

@@ -9,21 +9,17 @@
     </div>
     <div class="container-fluid d-flex justify-content-around mt-5">
         {% if is_owner %}
-            <button class="btn btn-primary mb-5 d-none d-sm-block" type="button" data-bs-toggle="modal" data-bs-target="#modal-new-program">Nouveau programme</button>
-            <button title="Ajouter un nouveau programme" class="btn btn-primary d-block d-sm-none" type="button" data-bs-toggle="modal" data-bs-target="#modal-new-program">+</button>
+            <button class="btn btn-primary mb-5 d-none d-sm-block" type="button" data-bs-toggle="modal" data-bs-target="#modal-new-program" name="new_program_modal">Nouveau programme</button>
+            <button title="Ajouter un nouveau programme" class="btn btn-primary d-block d-sm-none" type="button" data-bs-toggle="modal" data-bs-target="#modal-new-program" name="new_program_modal_little">+</button>
             <!-- Modal new program -->
             <div class="modal fade" id="modal-new-program" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <h3 class="modal-title fs-5" id="modalLabel">{{ program_name }}</h3>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
                         <form method="post">
                             {% csrf_token %}
                             <div class="modal-body">
                                 <p>Comment souhaitez vous appeler le nouveau programme ?</p>
-                                {% csrf_token %}{{ program_form|crispy }}
+                                {{ program_form|crispy }}
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>

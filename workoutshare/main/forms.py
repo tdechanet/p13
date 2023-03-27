@@ -1,4 +1,5 @@
 from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Field
 from django.forms import ModelForm
 from main.models import Exercice, Session, Program
 
@@ -20,6 +21,13 @@ class SessionForm(ModelForm):
         fields = ['name']
         labels = {"name": ""}
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+        self.helper.layout = Layout(
+            Field('name', id="session_form", data_name="new_session")
+        )
 
 class ProgramForm(ModelForm):
     class Meta:

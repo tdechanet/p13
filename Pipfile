@@ -10,6 +10,7 @@ crispy-bootstrap5 = "*"
 django-compressor = "*"
 django-libsass = "*"
 psycopg2-binary = "*"
+selenium = "*"
 
 [dev-packages]
 pylint = "*"

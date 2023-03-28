@@ -1,5 +1,9 @@
 version: 2.1
 
+orbs:
+  python: circleci/python@2.1.1
+  browser-tools: circleci/browser-tools@1.4.0
+
 jobs:
   build:
     docker:
@@ -17,15 +21,11 @@ jobs:
       - run:
           name: install dependencies
           command: |
+            pip install pipenv
+            pipenv install --dev
             pip install packaging
             pip install webdriver-manager
             pip install selenium
-      - run:
-          command: pip install pipenv
-          name: Install pipenv
-      - run:
-          command: pipenv install --dev
-          name: Install dependencies
       - run:
           command: pipenv run pytest --cov 
           name: Test

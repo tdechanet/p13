@@ -87,12 +87,12 @@ WSGI_APPLICATION = 'workoutshare.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'HOST': 'localhost',
-        'PORT': 5432,
-        'USER': 'workoutshare_admin',
-        'NAME': 'workoutshare_db',
-        'PASSWORD': os.getenv('WORKOUTSHARE_DB_PASSWORD'),
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'my_media',
+            'USER': 'example',
+            'PASSWORD': '1234',
+            'HOST': 'localhost',
+            'PORT': '5432',
     }
 }
 

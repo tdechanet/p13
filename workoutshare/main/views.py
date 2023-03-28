@@ -16,6 +16,7 @@ from .forms import ExerciceForm, SessionForm, ProgramForm
 def home_page(request):
     """This function is used to show to a user all the programs he follows."""
 
+    #getting the posted programs of the followed users
     programs = Program.objects.filter(
         user_id__authors__follower=request.user,
         published=1).order_by('-updated_at')
@@ -37,8 +38,10 @@ def legal_mention(request):
 def favorite_page(request):
     """This fuction is used to show to a user his favorites programs."""
 
+    #getting the favorites programs of the user
     favorites = Program.objects.filter(favorite__user_id=request.user)
 
+    #user want to unfavorite a program
     if request.method == 'POST':
         # pointing to the right program
         program_id = request.POST.get('id')
@@ -86,13 +89,16 @@ def profile_page(request, user_id=None): #pylint: disable=R0914, disable=R0912
     new_program_form = ProgramForm(request.POST or None)
 
     if request.method == 'POST':
-
+        
+        # if the user want to create a program we ask the name of the program
         if 'new_program' in request.POST:
             if is_owner:
                 if new_program_form.is_valid():
                     new_program_form_raw = new_program_form.save(commit=False)
                     new_program_form_raw.user_id = request.user
                     new_program_form_raw.save()
+
+                    #redirect to the new program page
                     return redirect('program', program_id=new_program_form_raw.id)
 
         elif 'user_follow' in request.POST:
@@ -129,6 +135,7 @@ def profile_page(request, user_id=None): #pylint: disable=R0914, disable=R0912
             if 'program_delete' in request.POST:
                 return redirect('delete_program', program_id=program_selected.pk)
 
+        # we redirect to same page to actualize potential changes
         return redirect('profile', user_id=selected_user_id)
 
     followers = []
@@ -177,12 +184,15 @@ def program_page(request, program_id):
     # checking if the user is the owner of the program
     is_owner = request.user == program_selected.user_id
 
+    #creating form in case user want to create a new session
     new_session_form = SessionForm(request.POST or None)
 
+    #this form is used to let the user modify the name of the program
     modify_program_name_form = ProgramForm(request.POST or None, instance=program_selected)
 
     if request.method == 'POST':
-
+        
+        # we actualize the updated at of the program_selected
         program_selected.updated_at = timezone.now()
         program_selected.save()
 
@@ -192,6 +202,7 @@ def program_page(request, program_id):
             session = sessions[int(session_id)]
             return redirect('delete_session', session_id=session.pk)
 
+        # we create the new session and redirect to the new session page
         if 'new_session' in request.POST:
             if is_owner:
                 if new_session_form.is_valid():
@@ -200,6 +211,7 @@ def program_page(request, program_id):
                     new_session_form_raw.save()
                     return redirect('session', session_id=new_session_form_raw.id)
 
+        #the user want to modify the name of the program
         if 'modify_program_name' in request.POST:
             if is_owner:
                 if modify_program_name_form.is_valid():
@@ -244,16 +256,20 @@ def session_page(request, session_id):
     if session.get_owner() != request.user: #verifying that the session belong to the connected user
         raise Http404()
 
+    #getting the exercice linked to the session and clean the time data
     exercices = Exercice.objects.filter(session_id=session.pk)
     exercices = timedelta_no_hours(exercices)
 
+    #create the formset of the exercices
     exercice_formset = modelformset_factory(Exercice, form=ExerciceForm, extra=0)
     formset = exercice_formset(request.POST or None, queryset=exercices)
 
+    #create the form that let the user modify the name of the session
     session_name_form = SessionForm(request.POST or None, instance=session)
 
     if request.method == 'POST':
 
+        #we update the program updated at field
         session_program = session.program_id
         session_program.updated_at = timezone.now()
         session_program.save()
@@ -265,6 +281,7 @@ def session_page(request, session_id):
             # redirect to delete url
             return redirect('delete_exercice', exercice_id=exercice.pk)
 
+        #we verify that the form for the exercices are correct and the form of session name
         if 'save_session' in request.POST:
             if formset.is_valid() and session_name_form.is_valid():
                 for form in formset:
@@ -308,10 +325,12 @@ def new_exercice_page(request, session_id):
         row.session_id = session
         row.save()
 
+        # we update the program update at field
         session_program = session.program_id
         session_program.updated_at = timezone.now()
         session_program.save()
 
+        #redirect to the linked session
         return redirect('session', session_id=session.pk)
 
     context = {
@@ -325,11 +344,14 @@ def new_exercice_page(request, session_id):
 @login_required(login_url='/login/')
 def user_research_page(request):
     """This method permit the user to research other users."""
+
+    # using trigarm reserach for user reserach
     query = request.GET.get("user_research_bar")
     research_results = CustomUser.objects.filter(username__trigram_similar=query)
 
     users_details = []
 
+    # building the lost of potential corresponding users
     for user in research_results:
         programs = Program.objects.filter(user_id=user)
         users_details.append((user, programs.count()))

@@ -26,8 +26,7 @@ jobs:
             pip install packaging
             pip install webdriver-manager
             pip install selenium
-            sudo apt-get update
-            sudo apt-get install postgresql-9.4-pg_trgm
+            psql -U root -d circle-test -h localhost -p 5432 -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;"
       - run:
           command: pipenv run pytest --cov 
           name: Test

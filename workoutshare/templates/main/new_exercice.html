@@ -23,11 +23,11 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{{ form.name }}</td>
-                            <td>{{ form.muscle_group_id }}</td>
-                            <td>{{ form.sets }}</td>
-                            <td>{{ form.reps }}</td>
-                            <td>{{ form.cool }}</td>
+                            <td>{{ form.name|as_crispy_field }}</td>
+                            <td>{{ form.muscle_group_id|as_crispy_field }}</td>
+                            <td>{{ form.sets|as_crispy_field }}</td>
+                            <td>{{ form.reps|as_crispy_field }}</td>
+                            <td>{{ form.cool|as_crispy_field }}</td>
                         </tr>
                     </tbody>
                 </table>

@@ -5,7 +5,11 @@ html {
 	font-family: 'Montserrat';
 }
 
-nav {
+.content {
+	min-height: calc(100vh - 50px);
+}
+
+nav, footer {
 	background-color: $primary;
 	color: #FFFFFF;
 }
@@ -37,11 +41,13 @@ nav {
 .btn {
 	background-color: $secondary;
 	border-color: $secondary;
+	color: white;
 }
 
 .btn:hover {
 	border-color: black;
 	background-color: black;
+	color: white;
 }
 
 textarea {
@@ -60,6 +66,11 @@ textarea {
 	filter: invert(51%) sepia(1%) saturate(2301%) hue-rotate(348deg) brightness(94%) contrast(83%);
 }
 
+.follow-btn-gray {
+	border-color: #807b76;
+	background-color: #807b76;
+}
+
 .border-secondary {
 	border: 1px solid $secondary;
 }
@@ -72,3 +83,8 @@ td {
 	overflow: auto;
 	white-space: nowrap;
 }
+
+.footer {
+	height: 50px;
+	margin-top: 10px;
+  }

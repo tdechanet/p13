@@ -2,20 +2,72 @@
 
 {% block title %}{{ username }}{% endblock %}
 {% load static %}
+{% load crispy_forms_tags %}
 {% block content %}
+    <div class="container-fluid d-flex justify-content-center mt-5">
+        <h2>{{ username }}</h2>
+    </div>
     <div class="container-fluid d-flex justify-content-around mt-5">
         {% if is_owner %}
-            <button class="btn btn-primary d-none d-sm-block" href="#" role="button">Nouveau programme</button>
-            <button title="Ajouter un nouveau programme" class="btn btn-primary d-block d-sm-none" href="#" role="button">+</button>
+            <button class="btn btn-primary mb-5 d-none d-sm-block" type="button" data-bs-toggle="modal" data-bs-target="#modal-new-program" name="new_program_modal">Nouveau programme</button>
+            <button title="Ajouter un nouveau programme" class="btn btn-primary d-block d-sm-none" type="button" data-bs-toggle="modal" data-bs-target="#modal-new-program" name="new_program_modal_little">+</button>
+            <!-- Modal new program -->
+            <div class="modal fade" id="modal-new-program" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <p>Comment souhaitez vous appeler le nouveau programme ?</p>
+                                {{ program_form|crispy }}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                <button class="btn btn-primary" type="submit" name="new_program">Valider</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         {% else %}
-            <button class="btn btn-primary" href="#" role="button">Suivre</button>
+            <form method="post">
+                {% csrf_token %}
+                {% if is_following %}
+                    <button class="btn" type="submit" name="user_follow" value="{{ is_following }}" role="button">Unfollow</button>   
+                {% else %}
+                    <button class="btn follow-btn-gray" type="submit" name="user_follow" value="{{ is_following }}" role="button">Follow</button>  
+                {% endif %}
+            </form>
         {% endif %}
-        <h2>{{ username }}</h2>
-        <p class="align-middle">{{ followers }} followers</p>
+        <p class="align-middle pointer-image" data-bs-toggle="modal" data-bs-target="#modal-followers">{{ followers|length }} followers</p>
+            <!-- Modal followers list -->
+            <div class="modal fade" id="modal-followers" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title fs-5" id="modalLabel">{{ followers|length }} followers</h3>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            {% if followers|length is 0 %}
+                                <p>Cet utilisateur n'est suivi par personne.</p>
+                            {% else %}
+                            {% for follower in followers %}
+                                <a href="{% url 'profile' follower.pk %}">{{ follower }}</a><br>
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
     </div>
     <div class="container-fluid">
     {% if programs|length == 0 %}
-        <p class="mt-5 text-center">Vous n'avez pas encore de programme. Rajoutez en un avec le bouton "Nouveau Programme".</p>
+        {% if is_owner %}
+            <p class="mt-5 text-center">Vous n'avez pas encore de programme. Rajoutez en un avec le bouton "Nouveau Programme".</p>
+        {% else %}
+            <p class="mt-5 text-center">Cet utilisateur n'a pas de programme enregistrer.</p>
+        {% endif %}
     {% else %}
         {% for program in programs %}
             <div class="card mt-5 mx-5">
@@ -37,7 +89,7 @@
                                 <label class="pointer-image">
                                     <img title="Supprimer le programme" class="card-logo img-fluid mt-2" src="{% static 'image/delete.svg' %}"/>
                                     <button type="button" class="hidden-submit" data-bs-toggle="modal" data-bs-target="#modal{{ forloop.counter0 }}"></button>
-                                    <!-- Modal -->
+                                    <!-- Modal delete program -->
                                     <div class="modal fade" id="modal{{ forloop.counter0 }}" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
@@ -56,6 +108,19 @@
                                             </div>
                                         </div>
                                     </div>
+                                </label>
+                            </form>
+                        {% else %}
+                            <form class="col-sm-4 col-12 d-flex justify-content-sm-end justify-content-around" method="post">
+                                {% csrf_token %}
+                                <label class="pointer-image">
+                                    {% if program.favorites %}
+                                        <img title="Retirer le programme des favoris" class="card-logo img-fluid mt-2" src="{% static 'image/favorite.svg' %}">
+                                    {% else %}
+                                        <img title="Ajouter le programme aux favoris" class="card-logo send-btn-gray img-fluid mt-2" src="{% static 'image/favorite.svg' %}">
+                                    {% endif %}
+                                    <input class="hidden-submit" type="submit" name="program_favorite" value="{{ program.favorites }}">
+                                    <input type="hidden" value="{{ forloop.counter0 }}" name="id">
                                 </label>
                             </form>
                         {% endif %}

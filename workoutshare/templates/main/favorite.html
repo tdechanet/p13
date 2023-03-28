@@ -1,16 +1,29 @@
 {% extends "base.html" %}
 
-{% block title %}Accueil{% endblock %}
+{% block title %}Favoris{% endblock %}
 {% load static %}
+{% load crispy_forms_tags %}
 {% block content %}
-{% if programs|length is 0 %}
-    <p class="mt-5 text-center">Vous ne suivez personne. Pour trouver des utilisateurs à suivre, utilisez la barre de recherche dans la navigation.</p>
-{% else %}
-    {% for program in programs %}
+    <div class="container-fluid d-flex justify-content-center mt-5">
+        <h2>Programmes favoris</h2>
+    </div>
+    <div class="container-fluid">
+    {% if favorites|length == 0 %}
+        <p class="mt-5 text-center">Vous n'avez aucun programme en favoris.</p>
+    {% else %}
+        {% for program in favorites %}
             <div class="card mt-5 mx-5">
                 <div class="container-fluid">
                     <div class="card-header row d-flex">
                         <a class="card-title col-sm-8 col-12 text-sm-start text-center fs-2" href="{% url 'program' program.pk %}"><h3>{{ program.name }}</h3></a>
+                        <form class="col-sm-4 col-12 d-flex justify-content-sm-end justify-content-around" method="post">
+                            {% csrf_token %}
+                            <label class="pointer-image">
+                                <img title="Retirer le programme des favoris" class="card-logo img-fluid mt-2" src="{% static 'image/favorite.svg' %}">
+                                <input class="hidden-submit" type="submit" name="program_favorite">
+                                <input type="hidden" value="{{ forloop.counter0 }}" name="id">
+                            </label>
+                        </form>
                     </div>
                 </div>
                 <div class="card-body row">
@@ -27,6 +40,7 @@
                     </div>
                 </div>
             </div>
-    {% endfor %}
-{% endif %}
+        {% endfor %}
+    {% endif %}
+    </div>
 {% endblock %}

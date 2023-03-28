@@ -12,7 +12,7 @@ jobs:
           TEST_DATABASE_URL: postgresql://postgres@localhost/circle_test
       - image: cimg/postgres:14.0
         environment:
-          - POSTGRES_USER: root
+          POSTGRES_USER: workoutshare_admin
 
     steps:
       - checkout
@@ -26,7 +26,7 @@ jobs:
             pip install packaging
             pip install webdriver-manager
             pip install selenium
-            psql -U root -d circle_test -h localhost -p 5432 -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;"
+            psql -U workoutshare_admin -d circle_test -h localhost -p 5432 -c "CREATE EXTENSION pg_trgm;"
       - run:
           command: pipenv run pytest --cov 
           name: Test

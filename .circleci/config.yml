@@ -26,7 +26,7 @@ jobs:
             pip install packaging
             pip install webdriver-manager
             pip install selenium
-            psql -U workoutshare_admin -d circle_test -h localhost -p 5432 -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;"
+            psql -U postgres -d circle_test -h localhost -p 5432 -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;"
       - run:
           command: pipenv run pytest --cov 
           name: Test

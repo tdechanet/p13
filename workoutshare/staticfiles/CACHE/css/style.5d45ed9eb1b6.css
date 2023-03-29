@@ -1,0 +1,54 @@
+html {
+  font-family: 'Montserrat'; }
+
+nav {
+  background-color: #AD0202;
+  color: #FFFFFF; }
+
+.logo {
+  width: 75px; }
+
+.card-logo {
+  width: 40px;
+  height: 25px; }
+
+.research-logo {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  width: 60px; }
+
+.no-border {
+  border-style: none; }
+
+.no-border:focus {
+  box-shadow: unset !important; }
+
+.btn {
+  background-color: #1D1E21;
+  border-color: #1D1E21; }
+
+.btn:hover {
+  border-color: black;
+  background-color: black; }
+
+textarea {
+  resize: none; }
+
+.pointer-image {
+  cursor: pointer; }
+
+.hidden-submit {
+  display: none; }
+
+.send-btn-gray {
+  filter: invert(51%) sepia(1%) saturate(2301%) hue-rotate(348deg) brightness(94%) contrast(83%); }
+
+.border-secondary {
+  border: 1px solid #1D1E21; }
+
+.row-height {
+  min-height: 150px; }
+
+td {
+  overflow: auto;
+  white-space: nowrap; }

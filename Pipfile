@@ -10,7 +10,7 @@ crispy-bootstrap5 = "*"
 django-compressor = "*"
 django-libsass = "*"
 psycopg2-binary = "*"
-selenium = "*"
+sentry-sdk = "*"
 
 [dev-packages]
 pylint = "*"
@@ -18,7 +18,7 @@ pytest = "*"
 pytest-django = "*"
 pytest-cov = "*"
 pylint-django = "*"
-sentry-sdk = "*"
+selenium = "*"
 
 [requires]
 python_version = "3.11"

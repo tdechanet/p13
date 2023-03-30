@@ -1,0 +1,61 @@
+/* line 4, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+html {
+  font-family: 'Montserrat'; }
+
+/* line 8, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+nav {
+  background-color: #AD0202;
+  color: #FFFFFF; }
+
+/* line 13, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+.logo {
+  width: 75px; }
+
+/* line 17, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+.card-logo {
+  width: 40px;
+  height: 25px; }
+
+/* line 22, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+.research-logo {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  width: 60px; }
+
+/* line 28, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+.no-border {
+  border-style: none; }
+
+/* line 32, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+.no-border:focus {
+  box-shadow: unset !important; }
+
+/* line 36, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+.btn {
+  background-color: #1D1E21;
+  border-color: #1D1E21; }
+
+/* line 41, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+.btn:hover {
+  border-color: black;
+  background-color: black; }
+
+/* line 46, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+textarea {
+  resize: none; }
+
+/* line 50, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+.pointer-image {
+  cursor: pointer; }
+
+/* line 54, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+.hidden-submit {
+  display: none; }
+
+/* line 58, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+.send-btn-gray {
+  filter: invert(51%) sepia(1%) saturate(2301%) hue-rotate(348deg) brightness(94%) contrast(83%); }
+
+/* line 62, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+.border-secondary {
+  border-color: red; }

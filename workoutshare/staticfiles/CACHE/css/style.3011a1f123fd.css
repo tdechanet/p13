@@ -1,0 +1,71 @@
+/* line 4, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+html {
+  font-family: 'Montserrat'; }
+
+/* line 8, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+nav {
+  background-color: #AD0202;
+  color: #FFFFFF; }
+
+/* line 13, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+.logo {
+  width: 75px; }
+
+/* line 17, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+.card-logo {
+  min-width: 40px;
+  width: 40px;
+  height: 25px; }
+
+/* line 23, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+.research-logo {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  width: 60px; }
+
+/* line 29, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+.no-border {
+  border-style: none; }
+
+/* line 33, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+.no-border:focus {
+  box-shadow: unset !important; }
+
+/* line 37, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+.btn {
+  background-color: #1D1E21;
+  border-color: #1D1E21; }
+
+/* line 42, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+.btn:hover {
+  border-color: black;
+  background-color: black; }
+
+/* line 47, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+textarea {
+  resize: none; }
+
+/* line 51, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+.pointer-image {
+  cursor: pointer; }
+
+/* line 55, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+.hidden-submit {
+  display: none; }
+
+/* line 59, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+.send-btn-gray {
+  filter: invert(51%) sepia(1%) saturate(2301%) hue-rotate(348deg) brightness(94%) contrast(83%); }
+
+/* line 63, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+.border-secondary {
+  border: 1px solid #1D1E21; }
+
+/* line 67, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+.row-height {
+  min-height: 150px; }
+
+/* line 71, c:/users/titou/documents/code/oc/p13/project/workoutshare/static/style.scss */
+td {
+  overflow: auto;
+  white-space: nowrap; }

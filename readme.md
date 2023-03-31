@@ -14,3 +14,8 @@ Then, you will need to specify the following environment variables :
 Then go in the registry Workoutshare and launch the command "py manage.py runserver" then click on the link prompted in the command line.
 
 This project use the frameworks django and bootstrap5.
+
+To run the tests of the projects, we use pytest, so you will need to run the comment "pytest" to verify that all tests are fine (if you want to run the coverage, add the argument "--cov" to the command).
+For a linter we use pylint, so to verify that the code follow the PEP8, use the command "pylint .\workoutshare\".
+
+Also, we use continuous integration, so at every code push, we run all the verifications. The used CI is circle.ci and you can find the configuration file inside the follower .circleci.

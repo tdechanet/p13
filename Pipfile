@@ -11,6 +11,7 @@ django-compressor = "*"
 django-libsass = "*"
 psycopg2-binary = "*"
 sentry-sdk = "*"
+flake8 = "*"
 
 [dev-packages]
 pylint = "*"

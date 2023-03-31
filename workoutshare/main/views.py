@@ -89,7 +89,7 @@ def profile_page(request, user_id=None): #pylint: disable=R0914, disable=R0912
     new_program_form = ProgramForm(request.POST or None)
 
     if request.method == 'POST':
-        
+
         # if the user want to create a program we ask the name of the program
         if 'new_program' in request.POST:
             if is_owner:
@@ -191,7 +191,7 @@ def program_page(request, program_id):
     modify_program_name_form = ProgramForm(request.POST or None, instance=program_selected)
 
     if request.method == 'POST':
-        
+
         # we actualize the updated at of the program_selected
         program_selected.updated_at = timezone.now()
         program_selected.save()

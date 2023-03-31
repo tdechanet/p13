@@ -11,6 +11,7 @@ Then, you will need to specify the following environment variables :
 -DB_NAME
 -WORKOUTSHARE_DB_PASSWORD
 
+It's not mendatory, but I also recommend you to run the command "py manage.py createsuperuser" to create an admin. By doing this, you will have acces to the admin page, where you can monitor the database entries and can add muscle group for the users to chose when creating an exercice.
 Then go in the registry Workoutshare and launch the command "py manage.py runserver" then click on the link prompted in the command line.
 
 This project use the frameworks django and bootstrap5.
